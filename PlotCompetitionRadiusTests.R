@@ -24,5 +24,44 @@ competition_radius_test_suites <- list(comp_1_test_suites, comp_2_test_suites, c
 competition_radius_loaded <- lapply(competition_radius_test_suites, function(test_suite_vector) lapply(test_suite_vector, loadResultsFromTestSuitePath))
 
 
-run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius.pdf", reliability, "Competition Radius", c(0.735, 0.80), 13, 6, 3)
-run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_WeakReliability.pdf", weakReliability, "Competition Radius", c(0.735, 0.80), 13, 6, 3)
+run(
+  competition_radius_loaded,
+  competition_radius_labels,
+  "CompetitionRadius.pdf",
+  reliability,
+  "Competition Radius",
+  c(0.735, 0.80),
+  13, 6,
+  xyratio=3,
+  ylim=c(0,1),
+  ylab="Reliability (Mean & STDEV)"
+)
+
+run(
+  competition_radius_loaded,
+  competition_radius_labels,
+  "CompetitionRadius_WeakReliability.pdf",
+  weakReliability,
+  "Competition Radius",
+  c(0.735, 0.80),
+  13, 6,
+  xyratio=3,
+  ylim=c(0,1),
+  ylab="Reliability (Mean & STDEV)"
+)
+
+
+run(
+  competition_radius_loaded, 
+  competition_radius_labels,
+  "CompetitionRadius_Latency.pdf", 
+  getOffSlots, 
+  "Competition Radius",
+  c(0.05, 0.80),
+  13, 6,
+  0.04, 
+  ylim=c(0, 150),
+  ylab="Latency (Mean & STDEV)"
+)
+
+

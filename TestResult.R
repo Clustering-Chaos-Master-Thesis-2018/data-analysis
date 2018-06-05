@@ -21,9 +21,13 @@ setGeneric(name="calculateSpread", def=function(theObject) {standardGeneric("cal
 setGeneric(name="totalPowerUsage", def=function(theObject) {standardGeneric("totalPowerUsage")})
 setGeneric(name="calculateReliability", def=function(theObject) {standardGeneric("calculateReliability")})
 setGeneric(name="calculateWeakReliability", def=function(theObject) {standardGeneric("calculateWeakReliability")})
+setGeneric(name="getOffSlots", def=function(theObject) {standardGeneric("getOffSlots")})
 setGeneric(name="meanOffSlot", def=function(theObject) {standardGeneric("meanOffSlot")})
 setGeneric(name="sdOffSlot", def=function(theObject) {standardGeneric("sdOffSlot")})
 
+setMethod(f="getOffSlots", signature = "TestResult", definition = function(theObject) {
+  return(theObject@max_data$off_slot)
+})
 
 setMethod(f="calculateSpread", signature = "TestResult", definition = function(theObject) {
   loc <- theObject@location_data
