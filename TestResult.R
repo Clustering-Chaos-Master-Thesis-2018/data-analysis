@@ -20,6 +20,7 @@ TestResult <- setClass(
 setGeneric(name="calculateSpread", def=function(theObject) {standardGeneric("calculateSpread")})
 setGeneric(name="totalPowerUsage", def=function(theObject) {standardGeneric("totalPowerUsage")})
 setGeneric(name="calculateReliability", def=function(theObject) {standardGeneric("calculateReliability")})
+setGeneric(name="calculateChaosReliability", def=function(theObject) {standardGeneric("calculateChaosReliability")})
 setGeneric(name="calculateWeakReliability", def=function(theObject) {standardGeneric("calculateWeakReliability")})
 setGeneric(name="getOffSlots", def=function(theObject) {standardGeneric("getOffSlots")})
 setGeneric(name="meanOffSlot", def=function(theObject) {standardGeneric("meanOffSlot")})
@@ -82,6 +83,28 @@ setMethod(f="calculateReliability", signature = "TestResult", definition = funct
   return(mean(round_result))
 })
 
+setMethod(f="calculateChaosReliability", signature = "TestResult", definition = function(theObject) {
+  networkwide_max <- max(theObject@location_data$node_id)
+  all_rounds <- unique(theObject@max_data$rd)
+  
+  roundData <- theObject@data
+  maxData <- theObject@max_data
+  node_count <- length(unique(roundData$node_id))
+  
+  round_result <- sapply(all_rounds, function(round) {
+    nodes_done_max <- maxData[maxData$rd == round,]
+    all(nodes_done_max$max == networkwide_max, nrow(nodes_done_max) == nrow(node_count))
+  })
+  
+  expectedMaxRounds <- round(599-node_count / 10)
+  if(expectedMaxRounds - length(round_result) > 0) {
+    round_result <- c(round_result,  rep(F, expectedMaxRounds - length(round_result)))
+  }
+  
+  return(mean(round_result))
+})
+
+chaos_reliability <- memoise(calculateChaosReliability, cache=db)
 reliability <- memoise(calculateReliability, cache=db)
 
 setMethod(f="calculateWeakReliability", signature = "TestResult", definition = function(theObject) {
