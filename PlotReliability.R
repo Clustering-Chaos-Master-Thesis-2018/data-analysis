@@ -1,4 +1,4 @@
-run <- function(test_suites, group_labels, plot_name, reliabilityFunction, label, position, width, height, xyratio, ylim, xlab = "Network Size (m^2)", ylab) {
+run <- function(test_suites, group_labels, plot_name, reliabilityFunction, label, position, width, height, xyratio, ylim, xlab = expression(paste("Network Size ", (m^2))), ylab) {
   the_plot <- plot_reliability(test_suites, group_labels, reliabilityFunction, label, position, xyratio, ylim, xlab, ylab)
   ggsave(file.path(evaluation_directory, plot_name),  plot=the_plot, width=width, height = height)
 }
