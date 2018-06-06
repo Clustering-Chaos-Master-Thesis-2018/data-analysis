@@ -59,7 +59,7 @@ run(
   "Competition Radius",
   c(0.05, 0.80),
   13, 6,
-  0.04, 
+  0.02, 
   ylim=c(0, 150),
   ylab="Latency (Mean & STDEV)"
 )

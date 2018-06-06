@@ -55,7 +55,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
     coord_fixed(xyratio, ylim = ylim) +
     guides(color=guide_legend(ncol=3)) +
     theme(
-      text = element_text(size=24),
+      text = element_text(size=16),
       #axis.text.x=element_text(angle=45, hjust=1),
       legend.justification = c(0, 0),
       legend.position = legend_position,
