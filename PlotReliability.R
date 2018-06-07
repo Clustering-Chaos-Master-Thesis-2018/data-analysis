@@ -1,9 +1,9 @@
-run <- function(test_suites, group_labels, plot_name, reliabilityFunction, label, position, width, height, xyratio, ylim, xlab = expression(paste("Network Size ", (m^2))), ylab) {
-  the_plot <- plot_reliability(test_suites, group_labels, reliabilityFunction, label, position, xyratio, ylim, xlab, ylab)
+run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim, xlab = expression(paste("Network Size ", (m^2))), ylab) {
+  the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab)
   ggsave(file.path(evaluation_directory, plot_name),  plot=the_plot, width=width, height = height)
 }
 
-label_and_flatten_data <- function(test_suite_groups, group_labels, reliabilityFunction) {
+label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction) {
   a <- mapply(function(list_of_test_suite_with_same_comp_radius, group_label) {
     b <- do.call("rbind", lapply(list_of_test_suite_with_same_comp_radius, function(test_suite) {
       c <- do.call("rbind", lapply(test_suite, function(test) {
@@ -12,10 +12,14 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, reliabilityF
         }
         #Only include the network spread in the plot.
         testName <- sub(".+?-motes-(.+?)x(?:.+?)-random", "\\1", test@testName)
-        if(length(reliabilityFunction(test)) == 0) {
+        if(length(meanFunction(test)) == 0) {
           return(NA)
         }
-        data.frame(simulation_name=testName, reliability=reliabilityFunction(test), group=group_label, spread=calculateSpread(test))
+        if(grepl("clustering-off", test@testDirectory) && identical(meanFunction, reliability)) {
+          data.frame(simulation_name=testName, reliability=chaos_reliability(test), group=group_label, spread=calculateSpread(test))
+        } else {
+          data.frame(simulation_name=testName, reliability=meanFunction(test), group=group_label, spread=calculateSpread(test)) 
+        }
       }))
       c
     }))
