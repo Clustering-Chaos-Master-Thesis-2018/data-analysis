@@ -36,5 +36,6 @@ min_node_count_test_suites <- list(min_node_count_0, min_node_count_2, min_node_
 min_node_count_loaded <- lapply(min_node_count_test_suites, function(test_suite_vector) lapply(test_suite_vector, loadResultsFromTestSuitePath))
 
 
-run(min_node_count_loaded, min_node_count_labels, "MinNodeCount.pdf", reliability, "Min Node Count", c(0.005, 0.005), 12, 6.4, 2)
-run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_WeakReliability.pdf", weakReliability, "Min Node Count", c(0.005, 0.005), 12, 6.4, 2)
+run(min_node_count_loaded, min_node_count_labels, "MinNodeCount.pdf", reliability, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_WeakReliability.pdf", weakReliability, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Latency.pdf", getOffSlots, "Min Node Count", c(0.05, 0.80), 13, 5.5, xyratio=0.012, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")

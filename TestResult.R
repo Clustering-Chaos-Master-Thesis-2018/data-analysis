@@ -54,7 +54,6 @@ setMethod(f="calculateReliability", signature = "TestResult", definition = funct
   maxData <- theObject@max_data
 
   round_result <- sapply(all_rounds, function(round) {
-    #browser()
     cluster_heads <- roundData[roundData$round == round & roundData$node_id == roundData$cluster_id,]
     if(round %% 2 == 0) {
       cluster_head_done_max <- maxData[maxData$rd == round & maxData$node_id %in% cluster_heads$node_id,]
