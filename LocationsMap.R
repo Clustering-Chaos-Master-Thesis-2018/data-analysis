@@ -51,8 +51,10 @@ plotNodeLocations <- function(testResult, clusterHeads=c(), node_cluster_map, ro
   # Merge data from log files with data from xml file
   nodes <- merge(node_cluster_map, nodes, by = "node_id", all = TRUE)
 
-  nodes_without_round_data <- nodes[is.na(nodes$cluster_id),]$node_id
-  nodes$cluster_id <- replace(nodes$cluster_id, nodes_without_round_data, 0)
+  
+  # Nodes which hasn't logged anything yet have no clusters. i.e. cluster 0.
+  nodes[is.na(nodes)] <- 0
+  
   # Remove nodes with no location.
   nodes <- nodes[complete.cases(nodes),]
   
