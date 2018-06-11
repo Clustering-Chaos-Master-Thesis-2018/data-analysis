@@ -1,4 +1,4 @@
-run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim, xlab = expression(paste("Network Size ", (m^2))), ylab) {
+run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = "Network Size (m)", ylab) {
   the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab)
   ggsave(file.path(evaluation_directory, plot_name),  plot=the_plot, width=width, height = height)
 }
@@ -35,17 +35,23 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   }
 
   stats <- label_and_flatten_data(test_suite_groups, group_labels, reliabilityFunction)
+  if(is.na(ylim)) {
+    if(nrow(stats[stats$reliability == 1918979041,]) == 1) {
+      stats <- stats[stats$reliability != 1918979041,] 
+    } else if(nrow(stats[stats$reliability == 7621758712,]) == 1) {
+      stats <- stats[stats$reliability != 7621758712,] 
+    }
+  }
   
   # Aggregate reliability for rows with same spread. Create mean and sd
   agg <- aggregate(reliability~simulation_name+group+spread, stats, function(a) c(mean=mean(a), sd=sd(a)))
   agg <- do.call(data.frame, agg)
   
   agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
-  
   #stats <- stats[complete.cases(stats),]
   #order by spread
   #stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
-  ggplot(agg) +
+  plot <- ggplot(agg) +
     geom_pointrange(
       size=1.5,
       aes(
