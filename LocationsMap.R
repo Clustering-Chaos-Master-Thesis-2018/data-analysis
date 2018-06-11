@@ -84,7 +84,12 @@ plotNodeLocations <- function(testResult, clusterHeads=c(), node_cluster_map, ro
 
   # Add size column
   nodes$node_sizes <- rep(2,length(nodes[["node_id"]]))
-  nodes$node_sizes <- replace(nodes$node_sizes, clusterHeads, 5)
+  
+  if(!is.null(clusterHeads) && length(clusterHeads) != 0) {
+    # Mark cluster heads as larger than normal nodes.
+    nodes[nodes$node_id %in% clusterHeads,]$node_sizes <- 5
+  }
+  
   if(nrow(associatingNodes) > 0) {
     assoc <- subset(nodes, node_id %in% associatingNodes$node_id)
     if(nrow(assoc) > 0) {
