@@ -18,7 +18,7 @@ source("Reliability.R")
 registerDoMC(4)
 
 
-evaluation_directory <- "/home/kerp/Exjobb/Evaluation/"
+evaluation_directory <- "~/Exjobb/Evaluation"
 working_directory <- "~/tests"
 
 loadResultFromTestInfoRow <- function(row) {
@@ -69,7 +69,7 @@ findAllTestsFromPath <- function(path) {
 
 generateAllLocationPlots <- function(path) {
   testSuites <- findAllTestsFromPath(evaluation_directory)
-  testResults <- unlist(lapply(testSuites, loadResultsFromTestSuitePath))
+  testResults <- unlist(mclapply(testSuites, loadResultsFromTestSuitePath, mc.cores = 8))
   testResults <- testResults[!is.na(testResults)]
   browser()
   foreach(result = testResults) %dopar% {

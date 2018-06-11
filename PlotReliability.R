@@ -11,7 +11,7 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
           return(NA)
         }
         #Only include the network spread in the plot.
-        testName <- sub(".+?-motes-(.+?)x(?:.+?)-random", "\\1", test@testName)
+        testName <- sub(".+?-motes-(.+?x.+?)-(random|spread)", "\\1", test@testName)
         if(length(meanFunction(test)) == 0) {
           return(NA)
         }
@@ -59,7 +59,6 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
     ylab(ylab) + 
     xlab(xlab) +
     labs(color=label) +
-    coord_fixed(xyratio, ylim = ylim) +
     guides(color=guide_legend(ncol=3)) +
     theme(
       text = element_text(size=16),
@@ -68,7 +67,11 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       legend.position = legend_position,
       plot.margin=grid::unit(c(0,0,0,0), "mm")
     )
-
+  
+  if(!is.na(ylim)) {
+    plot <- plot + coord_fixed(xyratio, ylim = ylim)
+  }
+  return(plot)
 }
 
 #run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2.pdf", "Competition Radius", c(0.735, 0.80), 13, 6, 3)

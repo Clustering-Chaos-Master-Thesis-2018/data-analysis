@@ -12,6 +12,6 @@ dev_dependencies <- c("r-lib/memoise", "tidyverse/ggplot2")
 lapply(dev_dependencies, function(repo) {
   dep_name <- strsplit(repo,'/')[[1]][[2]]
   if(!dep_name %in% rownames(installed.packages())) {
-    devtools::install_github(dep)
+    devtools::install_github(dep_name)
   }
 })
