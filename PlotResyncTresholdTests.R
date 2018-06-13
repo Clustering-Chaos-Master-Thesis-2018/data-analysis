@@ -22,14 +22,14 @@ comp_3_test_suites <- c(
 competition_radius_labels <- c("1  ", "2  ", "3  ")
 
 competition_radius_test_suites <- list(comp_1_test_suites, comp_2_test_suites, comp_3_test_suites)
-competition_radius_loaded <- lapply(competition_radius_test_suites, function(test_suite_vector) lapply(test_suite_vector, loadResultsFromTestSuitePath))
+competition_radius_loaded <- mclapply(competition_radius_test_suites, function(test_suite_vector) mclapply(test_suite_vector, loadResultsFromTestSuitePath, mc.cores = 4), mc.cores = 4)
 
 
 #pdf(file = file.path(evaluation_directory, "/plot.pdf"))
 
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1.pdf", reliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_WeakReliability.pdf", weakReliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold1_Latency.pdf", getOffSlots, "Competition Radius", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold1_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 
 
@@ -54,12 +54,12 @@ comp_3_test_suites <- c(
 competition_radius_labels <- c("1  ", "2  ", "3  ")
 
 competition_radius_test_suites <- list(comp_1_test_suites, comp_2_test_suites, comp_3_test_suites)
-competition_radius_loaded <- lapply(competition_radius_test_suites, function(test_suite_vector) lapply(test_suite_vector, loadResultsFromTestSuitePath))
+competition_radius_loaded <- mclapply(competition_radius_test_suites, function(test_suite_vector) mclapply(test_suite_vector, loadResultsFromTestSuitePath, mc.cores = 4), mc.cores = 4)
 
 
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2.pdf", reliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_WeakReliability.pdf", weakReliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold2_Latency.pdf", getOffSlots, "Competition Radius", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold2_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 
 comp_1_test_suites <- c(
@@ -85,11 +85,11 @@ comp_3_test_suites <- c(
 competition_radius_labels <- c("1  ", "2  ", "3  ")
 
 competition_radius_test_suites <- list(comp_1_test_suites, comp_2_test_suites, comp_3_test_suites)
-competition_radius_loaded <- lapply(competition_radius_test_suites, function(test_suite_vector) lapply(test_suite_vector, loadResultsFromTestSuitePath))
+competition_radius_loaded <- mclapply(competition_radius_test_suites, function(test_suite_vector) mclapply(test_suite_vector, loadResultsFromTestSuitePath, mc.cores = 4), mc.cores = 4)
 
 
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3.pdf", reliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_WeakReliability.pdf", weakReliability, "Competition Radius", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold3_Latency.pdf", getOffSlots, "Competition Radius", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold3_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 #dev.off()
