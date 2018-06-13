@@ -37,14 +37,14 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   }
 
   stats <- label_and_flatten_data(test_suite_groups, group_labels, reliabilityFunction)
-  if(is.na(ylim)) {
+  #We are calculating the energy used.
+  if(identical(reliabilityFunction, totalPowerUsage)) {
     if(nrow(stats[stats$reliability == 1918979041,]) == 1) {
       stats <- stats[stats$reliability != 1918979041,] 
     } else if(nrow(stats[stats$reliability == 7621758712,]) == 1) {
       stats <- stats[stats$reliability != 7621758712,] 
     }
   }
-  
   # Aggregate reliability for rows with same spread. Create mean and sd
   agg <- aggregate(reliability~simulation_name+group+spread, stats, function(a) c(mean=mean(a), sd=sd(a)))
   agg <- do.call(data.frame, agg)
@@ -76,9 +76,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       plot.margin=grid::unit(c(0,0,0,0), "mm")
     )
   
-  if(!is.na(ylim)) {
-    plot <- plot + coord_fixed(xyratio, ylim = ylim)
-  }
+  plot <- plot + coord_fixed(xyratio, ylim = ylim)
   return(plot)
 }
 
