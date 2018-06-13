@@ -17,11 +17,11 @@ plotHeatmap <- function(testResult, round_interval=range(testResult@data$round))
   roundData <- roundData[roundData$round %in% seq(round_interval[[1]],round_interval[[2]]),]
   roundData <- roundData[c("round", "node_id", "app")]
   roundData <- merge(roundData, appToColorTable, by="app")
-  
+  #rowser()
   points <-  9
   step <-  max(roundData$round)/points
   
-  
+  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
   
   ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
   xSteps <- floor(c(1, seq(step, max(roundData$round)-step, step), max(roundData$round)))
@@ -33,7 +33,7 @@ plotHeatmap <- function(testResult, round_interval=range(testResult@data$round))
     scale_x_discrete(expand=c(0,0), limits=xSteps, labels=xSteps ,breaks=xSteps) +
     coord_fixed()+
     labs(x="Round",y="Node ID") +
-    scale_color_brewer()
+    scale_fill_manual(values = cbPalette)
   
   return(p)
 }
