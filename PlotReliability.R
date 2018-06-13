@@ -1,17 +1,20 @@
 run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = "Network Size (m)", ylab) {
   the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab)
-  ggsave(file.path(evaluation_directory, plot_name),  plot=the_plot, width=width, height = height)
+  ggsave(file.path(evaluation_directory, "Plots", plot_name),  plot=the_plot, width=width, height = height)
 }
 
 label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction) {
   a <- mapply(function(list_of_test_suite_with_same_comp_radius, group_label) {
     b <- do.call("rbind", lapply(list_of_test_suite_with_same_comp_radius, function(test_suite) {
-      c <- do.call("rbind", lapply(test_suite, function(test) {
+      dc <- do.call("rbind", lapply(test_suite, function(test) {
         if(is.na(test)) {
           return(NA)
         }
         #Only include the network spread in the plot.
         testName <- sub(".+?-motes-(.+?x.+?)-(random|spread)", "\\1", test@testName)
+        if(testName == "flocklab") {
+          testName = ""
+        }
         if(length(meanFunction(test)) == 0) {
           return(NA)
         }
@@ -21,11 +24,10 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
           data.frame(simulation_name=testName, reliability=meanFunction(test), group=group_label, spread=calculateSpread(test)) 
         }
       }))
-      c
+      dc
     }))
     b
   }, test_suite_groups, group_labels, SIMPLIFY = F)
-  
   do.call("rbind", a)
 }
 
