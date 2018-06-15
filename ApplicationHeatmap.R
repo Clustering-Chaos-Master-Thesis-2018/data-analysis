@@ -21,19 +21,29 @@ plotHeatmap <- function(testResult, round_interval=range(testResult@data$round))
   points <-  9
   step <-  max(roundData$round)/points
   
-  cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7")
+  cbPalette <- c("#D55E00", "#E69F00", "#009E73", "#CC79A7", "#56B4E9")
   
   ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
   xSteps <- floor(c(1, seq(step, max(roundData$round)-step, step), max(roundData$round)))
+  # browser()
+  
+  emptyAssociateRow <- data.frame(app = "association", round = NA, node_id = NA, color = NA)
+  emptyMaxAppRow <- data.frame(app = "chaos_max_app", round = NA, node_id = NA, color = NA)
+  emptyClusterRow <- data.frame(app = "cluster", round = NA, node_id = NA, color = NA)
+  emptyDemoteRow <- data.frame(app = "demote", round = NA, node_id = NA, color = NA)
+  emptyJoinRow <- data.frame(app = "join", round = NA, node_id = NA, color = NA)
+  
+  roundDataWithAllApplications <- rbind(emptyAssociateRow, emptyClusterRow, emptyJoinRow, emptyDemoteRow, emptyMaxAppRow, roundData)
   #browser()
-  p <- ggplot(roundData, aes(round, node_id, fill=app)) +
+  p <- ggplot(roundDataWithAllApplications, aes(round, node_id, fill=app)) +
     geom_raster() +
-    geom_tile(colour="white",size=0.25) +
+    geom_tile(colour="white",size=0.1) +
     scale_y_discrete(expand=c(0,0), limits=ySteps, labels=ySteps, breaks=ySteps) +
     scale_x_discrete(expand=c(0,0), limits=xSteps, labels=xSteps ,breaks=xSteps) +
-    coord_fixed()+
-    labs(x="Round",y="Node ID") +
-    scale_fill_manual(values = cbPalette)
-  
+    #coord_fixed(ratio = 0.5) +
+    coord_fixed() +
+    labs(x="Round",y="Node ID", fill="Application") +
+    scale_fill_manual(labels = c("Association", "Cluster Service", "Join Service", "Demote Service", "Max"), values = cbPalette)
+  ggsave(filename = "/tmp/apa.pdf",width = 13, height=1.8)
   return(p)
 }
