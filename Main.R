@@ -18,7 +18,7 @@ source("Reliability.R")
 registerDoMC(4)
 
 
-evaluation_directory <- "~/Exjobb/Evaluation"
+evaluation_directory <- "~/Exjobb/Evaluation/max-node-count/max-node-count-off_1_2018-05-26_19.03.59/"
 working_directory <- "~/tests"
 
 loadResultFromTestInfoRow <- function(row) {
@@ -54,7 +54,7 @@ loadResultsFromTestSuitePath <- function(testSuitePath) {
 }
 
 findAllTestsFromPath <- function(path) {
-  allTests <- list.files(path, recursive = T, full.names = T, pattern = "cooja.log")
+  allTests <- list.files(path, recursive = T, full.names = T, pattern = "locations.pdf")
   allTestsWithLocations <- list.files(path, recursive = T, full.names = T, pattern = "locations.pdf")
   
   allTests <- unlist(lapply(allTests, dirname))
@@ -64,7 +64,7 @@ findAllTestsFromPath <- function(path) {
   allTestsWithLocations <- unlist(allTestsWithLocations, use.names=FALSE)
   
   filteredTests <- setdiff(allTests, allTestsWithLocations)
-  unique(unlist(lapply(filteredTests, dirname)))
+  unique(unlist(lapply(allTests, dirname)))
 }
 
 generateAllLocationPlots <- function(path) {
@@ -72,8 +72,13 @@ generateAllLocationPlots <- function(path) {
   testResults <- unlist(mclapply(testSuites, loadResultsFromTestSuitePath, mc.cores = 8))
   testResults <- testResults[!is.na(testResults)]
   browser()
-  foreach(result = testResults) %dopar% {
-    prepareAndPlotNodeLocations(result)
+  foreach(result = testResults) %do% {
+    #print(result@testName)
+    if(grepl("1000x1000", result@testName)) {
+      print(result@testName)
+      prepareAndPlotNodeLocations(result)  
+    }
+    
   }
  
 }

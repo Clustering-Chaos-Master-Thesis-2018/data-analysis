@@ -10,7 +10,7 @@ prepareAndPlotNodeLocations <- function(testResult) {
   roundData <- testResult@data
   max_round <- max(roundData$round, na.rm = TRUE)
   pdf(file = file.path(testResult@testDirectory, "locations.pdf"))
-  for (round in 1:max_round){
+  for (round in 50:70 ){
     filteredRoundData <- roundData[roundData$round == round,]
     clusters <- clusterHeadIds(filteredRoundData)
 
@@ -71,11 +71,16 @@ plotNodeLocations <- function(testResult, clusterHeads=c(), node_cluster_map, ro
     return()
   }
   
-  lastAssociatingNodes <<- associatingNodes
-  lastNodes <<- nodes
-  lastClusterHeads <<- clusterHeads
-  
-  allClusterHeads <- unique(roundData$cluster_id)
+  #lastAssociatingNodes <<- associatingNodes
+  #lastNodes <<- nodes
+  #lastClusterHeads <<- clusterHeads
+  #browser()
+  #filterClusterHeads <- roundData[roundData$round > 0,]
+  #filterClusterHeads <- filterClusterHeads[filterClusterHeads$round < 200,]
+  #allClusterHeads <- unique(filterClusterHeads$cluster_id)
+  #browser()
+  allClusterHeads <- c(21, 35, 46)
+  #allClusterHeads <- c(1, 22, 30)
   minColors <- order(allClusterHeads)
   # Add color column
   # Get distinguishable colors
@@ -105,5 +110,9 @@ plotNodeLocations <- function(testResult, clusterHeads=c(), node_cluster_map, ro
     plot(nodes$y~nodes$x, ylim = rev(range(nodes$y)), asp=1, col=nodes$color, pch=16, cex=nodes$node_sizes, xlab="x", ylab="y", main = paste0("Round Number: ",round_id))
   }
 
-  text(nodes$y~nodes$x, labels=nodes$node_id, col="black") # Write node_id on top of the nodes
+  clusterHeads <- append(clusterHeads, c(40, 23))
+  #text(nodes$y~nodes$x, labels=nodes$node_id, col="black") # Write node_id on top of the nodes
+  if(nrow(nodes[nodes$node_id %in% clusterHeads,]) > 0) {
+    text(nodes[nodes$node_id %in% clusterHeads,]$y~nodes[nodes$node_id %in% clusterHeads,]$x, labels=nodes[nodes$node_id %in% clusterHeads,]$node_id, col="black") # Write node_id on top of the nodes 
+  }
 }
