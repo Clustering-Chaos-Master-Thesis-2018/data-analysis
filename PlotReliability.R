@@ -35,7 +35,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   if(length(test_suite_groups) != length(group_labels)) {
     stop("Requires same length on number of test suite groups and labels")
   }
-
+  cbPalette <- c("#000000", "#009E73", "#56B4E9", "#D55E00")
   stats <- label_and_flatten_data(test_suite_groups, group_labels, reliabilityFunction)
   #We are calculating the energy used.
   if(identical(reliabilityFunction, totalPowerUsage)) {
@@ -45,16 +45,33 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       stats <- stats[stats$reliability != 7621758712,] 
     }
   }
+
   # Aggregate reliability for rows with same spread. Create mean and sd
   agg <- aggregate(reliability~simulation_name+group+spread, stats, function(a) c(mean=mean(a), sd=sd(a)))
   agg <- do.call(data.frame, agg)
-  
-  agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
+
   #stats <- stats[complete.cases(stats),]
   #order by spread
-  #stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
-  plot <- ggplot(agg) +
-    geom_pointrange(
+  
+  plot <- NA
+
+  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability) && FALSE) {
+    stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
+    plot <- ggplot(stats) + geom_point(
+      size=3,
+      aes(
+        simulation_name,
+        reliability,
+        #ymax=reliability.mean+reliability.sd,
+        #ymin=reliability.mean-reliability.sd,
+        color=group
+      ),
+      position = position_dodge(width = 0.5))
+  } else {
+    
+  }
+    agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
+    plot <- ggplot(agg) + geom_pointrange(
       size=1.5,
       aes(
         simulation_name,
@@ -63,20 +80,22 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
         ymin=reliability.mean-reliability.sd,
         color=group
       ),
-      position = position_dodge(width = 0.5)) +
-    ylab(ylab) + 
+      position = position_dodge(width = 0.5))
+  #}
+  
+  plot <- plot + ylab(ylab) + 
     xlab(xlab) +
     labs(color=label) +
-    guides(color=guide_legend(ncol=3)) +
+    guides(color=guide_legend(ncol=num_cols)) +
+    scale_color_manual(values = cbPalette) +
     theme(
       text = element_text(size=16),
       #axis.text.x=element_text(angle=45, hjust=1),
       legend.justification = c(0, 0),
       legend.position = legend_position,
       plot.margin=grid::unit(c(0,0,0,0), "mm")
-    )
+    )+ coord_fixed(xyratio, ylim = ylim)
   
-  plot <- plot + coord_fixed(xyratio, ylim = ylim)
   return(plot)
 }
 
