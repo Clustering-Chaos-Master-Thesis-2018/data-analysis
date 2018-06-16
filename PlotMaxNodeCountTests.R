@@ -37,13 +37,13 @@ max_node_count_15 <- c(
 )
 
 
-max_node_count_labels <- c("Off  ", "5  ", "10  ", "15  ")
+max_node_count_labels <- c("5  ", "10  ", "15  ", "Off  ")
 
 
-max_node_count_test_suites <- list(max_node_count_0, max_node_count_5, max_node_count_10, max_node_count_15)
+max_node_count_test_suites <- list(max_node_count_5, max_node_count_10, max_node_count_15, max_node_count_0)
 max_node_count_loaded <- mclapply(max_node_count_test_suites, function(test_suite_vector) mclapply(test_suite_vector, loadResultsFromTestSuitePath, mc.cores = 4), mc.cores = 4)
 
 
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf", reliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Max Node Count", c(0.05, 0.75), 13, 5.5, 0.012, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf", reliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)", num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)", num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Max Node Count", c(0.05, 0.75), 13, 5.5, 0.012, ylim=c(0, 150), ylab="Latency (Mean & STDEV)", num_cols = 4)

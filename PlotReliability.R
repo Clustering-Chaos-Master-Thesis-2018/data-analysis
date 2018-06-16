@@ -1,5 +1,5 @@
-run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = "Network Size (m)", ylab) {
-  the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab)
+run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = "Network Size (m)", ylab, num_cols = 3) {
+  the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab, num_cols)
   ggsave(file.path(evaluation_directory, "Plots", plot_name),  plot=the_plot, width=width, height = height)
 }
 
@@ -31,7 +31,7 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
   do.call("rbind", a)
 }
 
-plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunction, label, legend_position, xyratio, ylim, xlab, ylab) {
+plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunction, label, legend_position, xyratio, ylim, xlab, ylab, num_cols) {
   if(length(test_suite_groups) != length(group_labels)) {
     stop("Requires same length on number of test suite groups and labels")
   }
