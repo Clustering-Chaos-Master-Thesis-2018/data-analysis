@@ -1,4 +1,4 @@
-run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = "Network Size (m)", ylab, num_cols = 3) {
+run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = expression(paste("Network Size ", (m^2))), ylab, num_cols = 3) {
   the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab, num_cols)
   ggsave(file.path(evaluation_directory, "Plots", plot_name),  plot=the_plot, width=width, height = height)
 }
@@ -47,7 +47,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   
   plot <- NA
 
-  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability) && FALSE) {
+  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability)) {
     stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
     plot <- ggplot(stats) + geom_point(
       size=3,
@@ -59,9 +59,9 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
         color=group
       ),
       position = position_dodge(width = 0.5))
-  } else {
     
-  }
+    ylab="Reliability"
+  } else {
     agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
     plot <- ggplot(agg) + geom_pointrange(
       size=1.5,
@@ -73,7 +73,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
         color=group
       ),
       position = position_dodge(width = 0.5))
-  #}
+  }
   
   plot <- plot + ylab(ylab) + 
     xlab(xlab) +
@@ -86,7 +86,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       legend.justification = c(0, 0),
       legend.position = legend_position,
       plot.margin=grid::unit(c(0,0,0,0), "mm")
-    )+ coord_fixed(xyratio, ylim = ylim)
+    ) + coord_fixed(xyratio, ylim = ylim)
   
   return(plot)
 }
