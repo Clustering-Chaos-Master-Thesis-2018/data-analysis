@@ -50,6 +50,7 @@ loadResultsFromTestSuitePath <- function(testSuitePath) {
   }
   
   rows <- lapply(tests, Curry(createTestInfoRow, testSuitePath))
+  rows <- rows[!is.na(rows)]
   lapply(rows, loadResultFromTestInfoRow)
 }
 
@@ -62,7 +63,7 @@ findAllTestsFromPath <- function(path) {
   
   allTests <- unlist(allTests, use.names=FALSE)
   allTestsWithLocations <- unlist(allTestsWithLocations, use.names=FALSE)
-  
+
   filteredTests <- setdiff(allTests, allTestsWithLocations)
   unique(unlist(lapply(filteredTests, dirname)))
 }
@@ -182,9 +183,17 @@ testNames <- function(testSuitePath) {
 }
 
 createTestInfoRow <- function(testSuitePath, testName) {
-  c(
-    testName,
-    tools::file_path_as_absolute(file.path(testSuitePath, "simulation_files", paste(testName,"csc", sep = "."))),
-    tools::file_path_as_absolute(file.path(testSuitePath, testName))
-  )
+  return(tryCatch(
+    {
+      c(
+        testName,
+        tools::file_path_as_absolute(file.path(testSuitePath, "simulation_files", paste(testName,"csc", sep = "."))),
+        tools::file_path_as_absolute(file.path(testSuitePath, testName))
+      )
+    },
+    error=function(cond) {
+      message(paste("Could not load data from test: '", testSuitePath, testName, "' returning NA"))
+      return(NA)
+    })
+  ) 
 }

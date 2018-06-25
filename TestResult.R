@@ -47,10 +47,6 @@ setMethod(f="totalPowerUsage", signature = "TestResult", definition = function(t
                 sum(energyData$idle_transmit) +
                 sum(energyData$idle_listen)
   
-    if(energyUsed == 1918979041 || energyUsed == 7621758712 ) {
-      return (energyUsed)
-    }
-
     return (energyUsed / max(theObject@energy_data$clock_time) / length(unique(theObject@data$node_id)))
 })
 

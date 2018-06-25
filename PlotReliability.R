@@ -37,14 +37,6 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   }
   cbPalette <- c("#000000", "#009E73", "#56B4E9", "#D55E00")
   stats <- label_and_flatten_data(test_suite_groups, group_labels, reliabilityFunction)
-  #We are calculating the energy used.
-  if(identical(reliabilityFunction, totalPowerUsage)) {
-    if(nrow(stats[stats$reliability == 1918979041,]) == 1) {
-      stats <- stats[stats$reliability != 1918979041,] 
-    } else if(nrow(stats[stats$reliability == 7621758712,]) == 1) {
-      stats <- stats[stats$reliability != 7621758712,] 
-    }
-  }
 
   # Aggregate reliability for rows with same spread. Create mean and sd
   agg <- aggregate(reliability~simulation_name+group+spread, stats, function(a) c(mean=mean(a), sd=sd(a)))
