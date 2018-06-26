@@ -17,6 +17,10 @@ TestResult <- setClass(
   )
 )
 
+setGeneric(name="calculatePostPresentationChaosReliability", def=function(theObject) {standardGeneric("calculatePostPresentationChaosReliability")})
+setGeneric(name="calculatePostPresentationReliability", def=function(theObject) {standardGeneric("calculatePostPresentationReliability")})
+setGeneric(name="calculateStability", def=function(theObject) {standardGeneric("calculateStability")})
+
 setGeneric(name="calculateSpread", def=function(theObject) {standardGeneric("calculateSpread")})
 setGeneric(name="totalPowerUsage", def=function(theObject) {standardGeneric("totalPowerUsage")})
 setGeneric(name="calculateReliability", def=function(theObject) {standardGeneric("calculateReliability")})
@@ -49,6 +53,44 @@ setMethod(f="totalPowerUsage", signature = "TestResult", definition = function(t
   
     return (energyUsed / max(theObject@energy_data$clock_time) / length(unique(theObject@data$node_id)))
 })
+
+getLastRoundsMax <- function(round, maxData) {
+  lastRoundMaxData <- maxData[maxData$rd == (round - 1) & maxData$node_id == maxData$cluster_id,]$max
+  if(length(lastRoundMaxData) == 0) {
+    #No max data for the previous round, the correct max this round is the highest cluster head ID.
+    max(maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]$node_id)
+  } else {
+    max(lastRoundMaxData) 
+  }
+}
+
+setMethod(f="calculatePostPresentationReliability", signature = "TestResult", definition = function(theObject) {
+  maxData <- theObject@max_data
+  all_max_rounds <- unique(maxData$rd)
+  #print(theObject@testName)
+  #browser()
+  round_result <- sapply(all_max_rounds, function(round) {
+    cluster_heads <- maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]
+    if(nrow(cluster_heads) == 0) {
+      return(NA)
+    }
+    if(round %% 2 == 0) {
+      highest_local_max_last_round = getLastRoundsMax(round, maxData)
+      nrow(cluster_heads[cluster_heads$max == highest_local_max_last_round,]) / nrow(cluster_heads)
+    } else {
+      nodes_succeded_with_max <- sum(sapply(cluster_heads$node_id, function(cluster_id) {
+        nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_id,]
+        clusterwide_max <- max(nodes_done_max$node_id)
+        nrow(nodes_done_max[nodes_done_max$max == clusterwide_max,])
+      }))
+      nodes_succeded_with_max / nrow(maxData[maxData$rd == round,])
+    }
+  })
+  mean(round_result, na.rm = T)
+})
+
+
+calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
 
 setMethod(f="calculateReliability", signature = "TestResult", definition = function(theObject) {
   networkwide_max <- max(theObject@location_data$node_id)
@@ -107,6 +149,20 @@ setMethod(f="calculateChaosReliability", signature = "TestResult", definition = 
   return(mean(round_result))
 })
 
+setMethod(f="calculatePostPresentationChaosReliability", signature = "TestResult", definition = function(theObject) {
+  maxData <- theObject@max_data
+  maxRounds <- unique(maxData$rd)
+  
+  round_result <- sapply(maxRounds, function(round) {
+    nodesRunningMax <- maxData[maxData$rd == round,]
+    maxValue = max(nodesRunningMax$max)
+    nrow(nodesRunningMax[nodesRunningMax$max == maxValue,]) / nrow(nodesRunningMax)
+  })
+  
+  return(mean(round_result))
+})
+
+calculatePostPresentationChaosReliabilityCached <- memoise(calculatePostPresentationChaosReliability, cache=db)
 chaos_reliability <- memoise(calculateChaosReliability, cache=db)
 reliability <- memoise(calculateReliability, cache=db)
 

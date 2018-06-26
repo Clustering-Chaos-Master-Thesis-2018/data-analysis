@@ -18,8 +18,12 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
         if(length(meanFunction(test)) == 0) {
           return(NA)
         }
-        if(grepl("clustering-off", test@testDirectory) && identical(meanFunction, reliability)) {
-          data.frame(simulation_name=testName, reliability=chaos_reliability(test), group=group_label, spread=calculateSpread(test))
+        if(grepl("clustering-off", test@testDirectory) && (identical(meanFunction, reliability) || identical(meanFunction, calculatePostPresentationReliabilityCached))) {
+          if(identical(meanFunction, reliability)) {
+            data.frame(simulation_name=testName, reliability=chaos_reliability(test), group=group_label, spread=calculateSpread(test))
+          } else if(identical(meanFunction, calculatePostPresentationReliabilityCached)) {
+            data.frame(simulation_name=testName, reliability=calculatePostPresentationChaosReliabilityCached(test), group=group_label, spread=calculateSpread(test))
+          }
         } else {
           data.frame(simulation_name=testName, reliability=meanFunction(test), group=group_label, spread=calculateSpread(test)) 
         }
@@ -47,7 +51,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   
   plot <- NA
 
-  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability)) {
+  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability) || identical(reliabilityFunction, calculatePostPresentationReliabilityCached)) {
     stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
     plot <- ggplot(stats) + geom_point(
       size=3,
