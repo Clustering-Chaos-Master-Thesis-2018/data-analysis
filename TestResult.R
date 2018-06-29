@@ -108,11 +108,11 @@ setMethod(f="calculateReliability", signature = "TestResult", definition = funct
       if(nrow(cluster_heads) == 0){
         return(FALSE)
       }
-      a <- all(apply(cluster_heads, 1, function(cluster_head) {
-        nodes_in_cluster <- roundData[roundData$round == round & roundData$cluster_id == cluster_head[["cluster_id"]],]
+      a <- all(sapply(cluster_heads$node_id, function(cluster_head) {
+        nodes_in_cluster <- roundData[roundData$round == round & roundData$cluster_id == cluster_head,]
         clusterwide_max <- max(nodes_in_cluster$node_id)
         #nodes_in_cluster$max ==
-        nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_head[["cluster_id"]],]
+        nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_head,]
         all(nodes_done_max$max == clusterwide_max, nrow(nodes_done_max) == nrow(nodes_in_cluster))
       }))
       return(a)
