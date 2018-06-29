@@ -4,8 +4,8 @@ run <- function(test_suites, group_labels, plot_name, meanFunction, label, posit
 }
 
 label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction) {
-  a <- mapply(function(list_of_test_suite_with_same_comp_radius, group_label) {
-    b <- do.call("rbind", lapply(list_of_test_suite_with_same_comp_radius, function(test_suite) {
+  a <- mcmapply(function(list_of_test_suite_with_same_comp_radius, group_label) {
+    b <- do.call("rbind", mclapply(list_of_test_suite_with_same_comp_radius, function(test_suite) {
       dc <- do.call("rbind", lapply(test_suite, function(test) {
         if(is.na(test)) {
           return(NA)
@@ -29,9 +29,9 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
         }
       }))
       dc
-    }))
+    }, mc.cores = 4))
     b
-  }, test_suite_groups, group_labels, SIMPLIFY = F)
+  }, test_suite_groups, group_labels, SIMPLIFY = F, mc.cores = 4)
   do.call("rbind", a)
 }
 
