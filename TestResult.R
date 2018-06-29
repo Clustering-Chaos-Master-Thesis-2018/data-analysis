@@ -165,6 +165,21 @@ setMethod(f="calculatePostPresentationChaosReliability", signature = "TestResult
 calculatePostPresentationChaosReliabilityCached <- memoise(calculatePostPresentationChaosReliability, cache=db)
 chaos_reliability <- memoise(calculateChaosReliability, cache=db)
 reliability <- memoise(calculateReliability, cache=db)
+#reliability <- calculateReliability
+
+setMethod(f="calculateStability", signature = "TestResult", definition = function(theObject) {
+  maxData <- theObject@max_data
+  nodeCount <- length(unique(theObject@data$node_id))
+  maxRounds <- c(36:199, 236:399, 436:600)
+
+  round_result <- sapply(maxRounds, function(round) {
+    nrow(maxData[maxData$rd == round,]) / nodeCount
+  })
+  
+  return(mean(round_result))
+})
+
+calculateStabilityCached <- memoise(calculateStability, cache=db)
 
 setMethod(f="calculateWeakReliability", signature = "TestResult", definition = function(theObject) {
   # counts cluster failures as partial failures for a round. e.g. 0.333 for a round where 1 cluster succeeds and 2 fails.

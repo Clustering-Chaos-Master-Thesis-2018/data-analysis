@@ -37,5 +37,6 @@ min_node_count_loaded <- mclapply(min_node_count_test_suites, function(test_suit
 
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Reliability.pdf", reliability, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Stability.pdf", calculateStabilityCached, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Stability (Mean & STDEV)")
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_WeakReliability.pdf", weakReliability, "Min Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Latency.pdf", getOffSlots, "Min Node Count", c(0.05, 0.80), 13, 5.5, xyratio=0.012, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")

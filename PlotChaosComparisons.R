@@ -23,6 +23,7 @@ chaos_comparison_loaded <- mclapply(chaos_comparison_test_suites, function(test_
 
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", reliability, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_WeakReliability.pdf", weakReliability, "Protocol", c(0.735, 0.80), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Latency.pdf", getOffSlots, "Protocol", c(0.01, 0.01), 13, 5.5, 0.013, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Energy.pdf", totalPowerUsage, "Protocol", c(0.05, 0.05), 13, 5.5, 0.064, ylim=c(120, 150), ylab="Est. Energy (Mean & STDEV)")
@@ -53,6 +54,7 @@ chaos_comparison_loaded <- mclapply(chaos_comparison_test_suites, function(test_
 
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Reliability.pdf", calculateReliability, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=3.4, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=3.4, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Stability.pdf", calculateStabilityCached, "Protocol", c(0.01, 0.05), 13, 5.5, xyratio=3.4, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_WeakReliability.pdf", weakReliability, "Protocol", c(0.735, 0.80), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Latency.pdf", getOffSlots, "Protocol", c(0.01, 0.01), 13, 5.5, 0.0225, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Energy.pdf", totalPowerUsage, "Protocol", c(0.05, 0.05), 13, 5.5, 0.113, ylim=c(120, 150), ylab="Est. Energy (Mean & STDEV)")

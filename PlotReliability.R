@@ -50,8 +50,11 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   #order by spread
   
   plot <- NA
-
-  if(identical(reliabilityFunction, reliability) || identical(reliabilityFunction, chaos_reliability) || identical(reliabilityFunction, calculatePostPresentationReliabilityCached)) {
+  if(identical(reliabilityFunction, reliability) ||
+     identical(reliabilityFunction, chaos_reliability) ||
+     identical(reliabilityFunction, calculatePostPresentationReliabilityCached) ||
+     identical(reliabilityFunction, calculateStabilityCached)) {
+    
     stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
     plot <- ggplot(stats) + geom_point(
       size=3,
@@ -64,7 +67,12 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       ),
       position = position_dodge(width = 0.5))
     
-    ylab="Reliability"
+    if(identical(reliabilityFunction, calculateStabilityCached)) {
+      ylab="Stability"
+    } else {
+      ylab="Reliability"
+    }
+    
   } else {
     agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
     plot <- ggplot(agg) + geom_pointrange(

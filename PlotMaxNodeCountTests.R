@@ -46,5 +46,6 @@ max_node_count_loaded <- mclapply(max_node_count_test_suites, function(test_suit
 
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf", reliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)", num_cols = 4)
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)", num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Stability.pdf", calculateStabilityCached, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Stability (Mean & STDEV)", num_cols = 4)
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Max Node Count", c(0.005, 0.005), 13, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)", num_cols = 4)
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Max Node Count", c(0.05, 0.75), 13, 5.5, 0.012, ylim=c(0, 150), ylab="Latency (Mean & STDEV)", num_cols = 4)

@@ -28,8 +28,10 @@ competition_radius_loaded <- mclapply(competition_radius_test_suites, function(t
 #pdf(file = file.path(evaluation_directory, "/plot.pdf"))
 
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_Stability.pdf", calculateStabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Stability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold1_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold1_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 
 
@@ -58,8 +60,10 @@ competition_radius_loaded <- mclapply(competition_radius_test_suites, function(t
 
 
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_Stability.pdf", calculateStabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Stability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold2_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 
 comp_1_test_suites <- c(
@@ -89,7 +93,9 @@ competition_radius_loaded <- mclapply(competition_radius_test_suites, function(t
 
 
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_Stability.pdf", calculateStabilityCached, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Stability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.735, 0.80), 13, 5.5, 3, ylim=c(0, 1), ylab="Reliability (Mean & STDEV)")
-run(competition_radius_loaded, competition_radius_labels, "ResyncTreshold3_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold3_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
 
 #dev.off()

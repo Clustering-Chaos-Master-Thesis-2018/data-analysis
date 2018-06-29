@@ -26,5 +26,6 @@ competition_radius_loaded <- mclapply(competition_radius_test_suites, function(t
 
 run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_Reliability.pdf", reliability, "Competition Radius (hops)", c(0.05, 0.05), 13, 5.5, xyratio=3, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Competition Radius (hops)", c(0.05, 0.05), 13, 5.5, xyratio=3, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
+run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_Stability.pdf", calculateStabilityCached, "Competition Radius (hops)", c(0.05, 0.05), 13, 5.5, xyratio=3, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_WeakReliability.pdf", weakReliability, "Competition Radius (hops)", c(0.05, 0.05), 13, 5.5, xyratio=3, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(competition_radius_loaded, competition_radius_labels, "CompetitionRadius_Latency.pdf", getOffSlots, "Competition Radius (hops)", c(0.05, 0.80), 13, 5.5, 0.02, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")

@@ -25,6 +25,7 @@ chaos_comparison_loaded <- mclapply(chaos_comparison_test_suites, function(test_
 
 run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_Reliability.pdf", reliability, "Protocol", c(2.65, 0.05), 3.5, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_NewReliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", c(2.65, 0.05), 3.5, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_Stability.pdf", calculateStabilityCached, "Protocol", c(2.65, 0.05), 3.5, 5.5, xyratio=2, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_WeakReliability.pdf", weakReliability, "Protocol", c(0.735, 0.80), 3.5, 5.5, xyratio=2, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_Latency.pdf", getOffSlots, "Protocol", c(0.02, 0.8), 3.5, 5.5, 0.0065, ylim=c(0, 300), ylab="Latency (Mean & STDEV)")
 run(chaos_comparison_loaded, chaos_comparison_labels, "FlocklabComparison_Energy.pdf", totalPowerUsage, "Protocol", c(2.65, 0.80), 3.5, 5.5, 0.032, ylim=c(125, 175), ylab="Est. Energy (Mean & STDEV)")
