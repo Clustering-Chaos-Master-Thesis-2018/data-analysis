@@ -12,7 +12,7 @@ plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@d
   emptySuccessRow <- data.frame(status = "success", rd = NA, node_id = NA)
   emptyFailRow <- data.frame(status = "fail", rd = NA, node_id = NA)
   emptyUnknownRow <- data.frame(status = "unknown", rd = NA, node_id = NA)
-  spanToRoundOneRow <- data.frame(status = "unknown", rd = round_interval[[1]]:round_interval[[2]], node_id = 0)
+  spanToRoundOneRow <- data.frame(status = "unknown", rd = round_interval[[1]]:min(round_interval[[2]], max(roundData$round)), node_id = 0)
   
   successDF <- rbind(emptySuccessRow, emptyFailRow, emptyUnknownRow, spanToRoundOneRow, successDF)
   
