@@ -75,14 +75,14 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
     cluster_heads <- maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]
     if(nrow(cluster_heads) == 0) {
       browser()
-      return(data.frame(node_id = maxData$node_id, success="unknown", rd=round))
+      return(data.frame(node_id = maxData$node_id, status="unknown", rd=round))
       #return(NA)
     }
     if(round %% 2 == 0) { # CH round
       #browser()
       highest_local_max_last_round = getLastRoundsMax(round, maxData)
-      cluster_heads$success <- with(cluster_heads, max == highest_local_max_last_round)
-      return(cluster_heads[c("rd", "node_id", "success")])
+      cluster_heads$status <- with(cluster_heads, ifelse(max == highest_local_max_last_round, "success", "fail"))
+      return(cluster_heads[c("rd", "node_id", "status")])
       #nrow(cluster_heads[cluster_heads$max == highest_local_max_last_round,]) / nrow(cluster_heads)
     } else { # Cluster round
       #browser()
@@ -90,8 +90,8 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
         #browser()
         nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_id,]
         clusterwide_max <- max(nodes_done_max$node_id)
-        nodes_done_max$success <- with(nodes_done_max, max==clusterwide_max)
-        nodes_done_max[c("rd", "node_id", "success")]
+        nodes_done_max$status <- with(nodes_done_max, ifelse(max == clusterwide_max, "success", "fail"))
+        nodes_done_max[c("rd", "node_id", "status")]
         #nrow(nodes_done_max[nodes_done_max$max == clusterwide_max,])
       }))
       return(clusterRoundSuccessPerNode)
