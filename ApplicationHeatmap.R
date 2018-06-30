@@ -24,8 +24,8 @@ plotHeatmap <- function(testResult, round_interval=range(testResult@data$round))
   cbPalette <- c("#D55E00", "#E69F00", "#009E73", "#CC79A7", "#56B4E9")
   
   ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
-  xSteps <- floor(c(1, seq(step, max(roundData$round)-step, step), max(roundData$round)))
-  
+  xSteps <- floor(seq(round_interval[1], round_interval[2], (round_interval[2] - round_interval[1]) / 9))
+
   emptyAssociateRow <- data.frame(app = "association", round = NA, node_id = NA, color = NA)
   emptyMaxAppRow <- data.frame(app = "chaos_max_app", round = NA, node_id = NA, color = NA)
   emptyClusterRow <- data.frame(app = "cluster", round = NA, node_id = NA, color = NA)
@@ -37,7 +37,7 @@ plotHeatmap <- function(testResult, round_interval=range(testResult@data$round))
   bothDuplicates <- rbind(duplicatedRoundPrints, correspondingDuplicates)
   duplicatesForRemoval <- bothDuplicates[bothDuplicates$app != "association",]
   roundData <- roundData[setdiff(rownames(roundData), rownames(duplicatesForRemoval)),]
-  
+
   roundDataWithAllApplications <- rbind(emptyAssociateRow, emptyClusterRow, emptyJoinRow, emptyDemoteRow, emptyMaxAppRow, roundData)
   #browser()
   p <- ggplot(roundDataWithAllApplications, aes(round, node_id, fill=app)) +
