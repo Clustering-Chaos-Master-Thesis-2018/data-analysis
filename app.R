@@ -1,3 +1,4 @@
+library(shiny)
 
 source('Main.R')
 source('AppLib.R')
@@ -20,10 +21,11 @@ shinyApp(
       tabPanel("Application Heatmap",
                  verticalLayout(
                    textOutput("application_plot_name"),
-                   plotOutput("application_plot", height  = "3200px", width = "12288px"),
                    numericInput("num", label = h3("Which plot?"), value = 1),
                    sliderInput("application_plot_range", label = h3("Rounds span"), min = 0, 
-                               max = 700, value = c(1, 50))
+                               max = 700, value = c(1, 50)),
+                   plotOutput("application_plot"),#, height  = "3200px", width = "12288px"),
+                   plotOutput("reliability_heatmap")#, height  = "3200px", width = "12288px")
                )
       ),
       tabPanel("Reliability", 
@@ -95,10 +97,10 @@ shinyApp(
       
       tests <- testNames(abs_test_suite_path)
       if(length(tests) == 0) {
-        print("NOT working on it")
+        print("NOT working on application heatmap")
         #output$error <- "No tests found. Are the simulation files present?"
       } else {
-        print("Working on it")
+        print("Working on application heatmap")
         rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
         testResults <- load_data_m(rows)
         output$application_plot_name <- renderText(testResults[[input$num]]@testName)
@@ -107,7 +109,23 @@ shinyApp(
       
       
     })
-    
+    output$reliability_heatmap <- renderPlot({
+      
+      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+      
+      tests <- testNames(abs_test_suite_path)
+      
+      if(length(tests) == 0) {
+        print("NOT working on reliability heatmap")
+        #output$error <- "No tests found. Are the simulation files present?"
+      } else {
+        print("Working on reliability heatmap")
+        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
+        testResults <- load_data_m(rows)
+        output$application_plot_name <- renderText(testResults[[input$num]]@testName)
+        return(plotReliabilityHeatmap(testResults[[input$num]], input$application_plot_range))
+      }
+    })
     
     output$reliability_plot <- renderPlot({
       

@@ -21,6 +21,8 @@ setGeneric(name="calculatePostPresentationChaosReliability", def=function(theObj
 setGeneric(name="calculatePostPresentationReliability", def=function(theObject) {standardGeneric("calculatePostPresentationReliability")})
 setGeneric(name="calculateStability", def=function(theObject) {standardGeneric("calculateStability")})
 
+setGeneric(name="successPerNodeAndId", def=function(theObject) {standardGeneric("successPerNodeAndId")})
+
 setGeneric(name="calculateSpread", def=function(theObject) {standardGeneric("calculateSpread")})
 setGeneric(name="totalPowerUsage", def=function(theObject) {standardGeneric("totalPowerUsage")})
 setGeneric(name="calculateReliability", def=function(theObject) {standardGeneric("calculateReliability")})
@@ -63,6 +65,41 @@ getLastRoundsMax <- function(round, maxData) {
     max(lastRoundMaxData) 
   }
 }
+
+setMethod(f="successPerNodeAndId", signature = "TestResult", definition = function(theObject) {
+  maxData <- theObject@max_data
+  all_max_rounds <- unique(maxData$rd)
+  #print(theObject@testName)
+  #browser()
+  successPerNode <- do.call("rbind", lapply(all_max_rounds, function(round) {
+    cluster_heads <- maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]
+    if(nrow(cluster_heads) == 0) {
+      browser()
+      return(data.frame(node_id = maxData$node_id, success="unknown", rd=round))
+      #return(NA)
+    }
+    if(round %% 2 == 0) { # CH round
+      #browser()
+      highest_local_max_last_round = getLastRoundsMax(round, maxData)
+      cluster_heads$success <- with(cluster_heads, max == highest_local_max_last_round)
+      return(cluster_heads[c("rd", "node_id", "success")])
+      #nrow(cluster_heads[cluster_heads$max == highest_local_max_last_round,]) / nrow(cluster_heads)
+    } else { # Cluster round
+      #browser()
+      clusterRoundSuccessPerNode <- do.call("rbind", lapply(cluster_heads$node_id, function(cluster_id) {
+        #browser()
+        nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_id,]
+        clusterwide_max <- max(nodes_done_max$node_id)
+        nodes_done_max$success <- with(nodes_done_max, max==clusterwide_max)
+        nodes_done_max[c("rd", "node_id", "success")]
+        #nrow(nodes_done_max[nodes_done_max$max == clusterwide_max,])
+      }))
+      return(clusterRoundSuccessPerNode)
+    }
+  }))
+
+  return(successPerNode)
+})
 
 setMethod(f="calculatePostPresentationReliability", signature = "TestResult", definition = function(theObject) {
   maxData <- theObject@max_data

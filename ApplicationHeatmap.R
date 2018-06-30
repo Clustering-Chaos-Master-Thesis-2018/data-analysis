@@ -2,8 +2,36 @@
 library(ggplot2)
 library(reshape2)
 
-plotHeatmap <- function(testResult, round_interval=range(testResult@data$round)) {
+plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@data$round)) {
+  apa <- successPerNodeAndId(testResult)  
   
+  apa <- apa[apa$rd %in% seq(round_interval[[1]],round_interval[[2]]),]
+  
+  emptySuccessRow <- data.frame(success = T, rd = NA, node_id = NA)
+  emptyFailRow <- data.frame(success = F, rd = NA, node_id = NA)
+  spanToRoundOneRow <- data.frame(success = F, rd = 1, node_id = 0)
+  
+  apa <- rbind(emptySuccessRow, emptyFailRow, spanToRoundOneRow, apa)
+  
+  #ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
+  ySteps <- c(1,seq(5,45, 5), 50)
+  xSteps <- floor(seq(round_interval[1], round_interval[2], (round_interval[2] - round_interval[1]) / 9))
+  
+  cbPalette <- c("#D55E00", "#009E73", "#E69F00")
+  
+  p <- ggplot(apa, aes(rd, node_id, fill=success)) +
+    geom_raster() +
+    geom_tile(colour="white",size=0.1) +
+    scale_y_discrete(expand=c(0,0), limits=ySteps, labels=ySteps, breaks=ySteps) +
+    scale_x_discrete(expand=c(0,0), limits=xSteps, labels=xSteps ,breaks=xSteps) +
+    #coord_fixed(ratio = 1) +
+    # coord_fixed() +
+    labs(x="Round",y="Node ID", fill="Application") +
+    scale_fill_manual(labels = c("Failure", "Success"), values = cbPalette)
+  return(p)
+}
+
+plotHeatmap <- function(testResult, round_interval=range(testResult@data$round)) {
   
   print(testResult@testName)
   app <- c("association", "sleeping", "cluster", "join", "demote", "chaos_max_app")
