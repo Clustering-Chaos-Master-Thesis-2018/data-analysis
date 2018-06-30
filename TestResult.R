@@ -97,7 +97,24 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
       return(clusterRoundSuccessPerNode)
     }
   }))
-
+  colnames(successPerNode)[[1]] <- "round"
+  
+  roundData <- theObject@data
+  roundDataDoneMax <- roundData[roundData$app == "chaos_max_app",]
+  colnames(maxData)[[1]] <- "round"
+  
+  #bepa <- merge(roundDataDoneMax, maxData, by=intersect(colnames(roundDataDoneMax),colnames(maxData)))
+  
+  # Select the elements in roundDataDone max for which there is no corresponding row in roundData with the same round an node_id
+  max_rounds_without_result <- roundDataDoneMax[! paste(roundDataDoneMax$round, roundDataDoneMax$node_id) %in% 
+        c(paste(maxData$round, maxData$node_id),
+          paste(maxData$node_id, maxData$round)), ]
+  apa <- max_rounds_without_result[c("round", "node_id")]
+  apa$status <- "unknown"
+  
+  successPerNode <- rbind(successPerNode, apa)
+  
+  
   return(successPerNode)
 })
 

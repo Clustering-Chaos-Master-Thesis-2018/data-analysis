@@ -7,12 +7,12 @@ plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@d
   roundData <- testResult@data
   successDF <- successPerNodeAndId(testResult)  
   
-  successDF <- successDF[successDF$rd %in% seq(round_interval[[1]],round_interval[[2]]),]
+  successDF <- successDF[successDF$round %in% seq(round_interval[[1]],round_interval[[2]]),]
   
-  emptySuccessRow <- data.frame(status = "success", rd = NA, node_id = NA)
-  emptyFailRow <- data.frame(status = "fail", rd = NA, node_id = NA)
-  emptyUnknownRow <- data.frame(status = "unknown", rd = NA, node_id = NA)
-  spanToRoundOneRow <- data.frame(status = "unknown", rd = round_interval[[1]]:min(round_interval[[2]], max(roundData$round)), node_id = 0)
+  emptySuccessRow <- data.frame(status = "success", round = NA, node_id = NA)
+  emptyFailRow <- data.frame(status = "fail", round = NA, node_id = NA)
+  emptyUnknownRow <- data.frame(status = "unknown", round = NA, node_id = NA)
+  spanToRoundOneRow <- data.frame(status = "unknown", round = round_interval[[1]]:min(round_interval[[2]], max(roundData$round)), node_id = 0)
   
   successDF <- rbind(emptySuccessRow, emptyFailRow, emptyUnknownRow, spanToRoundOneRow, successDF)
   
@@ -21,7 +21,7 @@ plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@d
   
   cbPalette <- c("#009E73", "#D55E00", "#CC79A7", "#E69F00", "#56B4E9")
   #browser()
-  p <- ggplot(successDF, aes(rd, node_id, fill=status)) +
+  p <- ggplot(successDF, aes(round, node_id, fill=status)) +
     geom_raster() +
     geom_tile(colour="white",size=0.1) +
     scale_y_discrete(expand=c(0,0), limits=ySteps, labels=ySteps, breaks=ySteps) +
@@ -29,7 +29,7 @@ plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@d
     #coord_fixed(ratio = 1) +
     # coord_fixed() +
     labs(x="Round",y="Node ID", fill="Application Names") +
-    scale_fill_manual(labels = c("Success", "Failure"), values = cbPalette)
+    scale_fill_manual(values = cbPalette)
   return(p)
 }
 
