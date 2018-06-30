@@ -58,7 +58,7 @@ plotWrongCHStateHeatmap <- function(testResult, round_interval=range(testResult@
     scale_x_discrete(expand=c(0,0), limits=xSteps, labels=xSteps ,breaks=xSteps) +
     #coord_fixed(ratio = 1) +
     # coord_fixed() +
-    labs(x="Round",y="Node ID", fill="Application") +
+    labs(x="Round",y="Node ID", fill="Application Names") +
     scale_fill_manual(labels = c("Success", "Failure"), values = cbPalette)
   return(p)
 }
