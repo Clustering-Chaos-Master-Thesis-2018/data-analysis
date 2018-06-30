@@ -50,4 +50,4 @@ calculateWrongClusterHeadRoundState <- function(testResult) {
 calculateWrongClusterHeadRoundState <- memoise(calculateWrongClusterHeadRoundState, cache = db)
 
 #asd <- lapply(loadAllTests(fiftynodes), calculateWrongClusterHeadRoundState)
-asd <- mclapply(loadAllTests(fiftynodes), calculateWrongClusterHeadRoundState, mc.cores = 8)
+#asd <- mclapply(loadAllTests(fiftynodes), calculateWrongClusterHeadRoundState, mc.cores = 8)
