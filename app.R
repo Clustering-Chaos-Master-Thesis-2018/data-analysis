@@ -24,8 +24,9 @@ shinyApp(
                    numericInput("num", label = h3("Which plot?"), value = 1),
                    sliderInput("application_plot_range", label = h3("Rounds span"), min = 0, 
                                max = 700, value = c(1, 50)),
-                   plotOutput("application_plot"),#, height  = "3200px", width = "12288px"),
-                   plotOutput("reliability_heatmap")#, height  = "3200px", width = "12288px")
+                   plotOutput("application_plot", height  = "1080", width = "3840"),
+                   plotOutput("reliability_heatmap", height  = "1080", width = "3840"),
+                   plotOutput("wrong_chstate_heatmap", height = "1080", width = "3840")
                )
       ),
       tabPanel("Reliability", 
@@ -124,6 +125,24 @@ shinyApp(
         testResults <- load_data_m(rows)
         output$application_plot_name <- renderText(testResults[[input$num]]@testName)
         return(plotReliabilityHeatmap(testResults[[input$num]], input$application_plot_range))
+      }
+    })
+    
+    output$wrong_chstate_heatmap <- renderPlot({
+      
+      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+      
+      tests <- testNames(abs_test_suite_path)
+      
+      if(length(tests) == 0) {
+        print("NOT working on reliability heatmap")
+        #output$error <- "No tests found. Are the simulation files present?"
+      } else {
+        print("Working on chstate heatmap")
+        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
+        testResults <- load_data_m(rows)
+        output$application_plot_name <- renderText(testResults[[input$num]]@testName)
+        return(plotWrongCHStateHeatmap(testResults[[input$num]], input$application_plot_range))
       }
     })
     
