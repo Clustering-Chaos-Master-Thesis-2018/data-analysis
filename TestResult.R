@@ -56,13 +56,20 @@ setMethod(f="totalPowerUsage", signature = "TestResult", definition = function(t
     return (energyUsed / max(theObject@energy_data$clock_time) / length(unique(theObject@data$node_id)))
 })
 
-getLastRoundsMax <- function(round, maxData) {
-  lastRoundMaxData <- maxData[maxData$rd == (round - 1) & maxData$node_id == maxData$cluster_id,]$max
-  if(length(lastRoundMaxData) == 0) {
+getLastRoundsMax <- function(round, clusterHeads, maxData) {
+  filteredMaxData <- maxData[maxData$rd < round,]
+  
+  if(nrow(filteredMaxData) == 0) {
     #No max data for the previous round, the correct max this round is the highest cluster head ID.
-    max(maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]$node_id)
+    max(clusterHeads$node_id)
   } else {
-    max(lastRoundMaxData) 
+    filteredMaxData <- filteredMaxData[filteredMaxData$node_id %in% clusterHeads$node_id,]
+    lastClusterRoundMax <- do.call("rbind", lapply(clusterHeads$node_id, function(cluster_id) {
+      maxDataForClusterHead <- filteredMaxData[filteredMaxData$node_id == cluster_id,]
+      maxDataForClusterHead[which.max(maxDataForClusterHead$rd),]
+    }))
+    
+    max(lastClusterRoundMax$max)
   }
 }
 
@@ -74,13 +81,13 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
   successPerNode <- do.call("rbind", lapply(all_max_rounds, function(round) {
     cluster_heads <- maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]
     if(nrow(cluster_heads) == 0) {
-      browser()
+     
       return(data.frame(node_id = maxData$node_id, status="unknown", rd=round))
       #return(NA)
     }
     if(round %% 2 == 0) { # CH round
       #browser()
-      highest_local_max_last_round = getLastRoundsMax(round, maxData)
+      highest_local_max_last_round = getLastRoundsMax(round, cluster_heads, maxData)
       cluster_heads$status <- with(cluster_heads, ifelse(max == highest_local_max_last_round, "success", "fail"))
       return(cluster_heads[c("rd", "node_id", "status")])
       #nrow(cluster_heads[cluster_heads$max == highest_local_max_last_round,]) / nrow(cluster_heads)
