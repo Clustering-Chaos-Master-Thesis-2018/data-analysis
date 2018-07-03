@@ -18,18 +18,18 @@ TestResult <- setClass(
 )
 
 setGeneric(name="calculatePostPresentationChaosReliability", def=function(theObject) {standardGeneric("calculatePostPresentationChaosReliability")})
-setGeneric(name="calculatePostPresentationReliability", def=function(theObject, roundRange) {standardGeneric("calculatePostPresentationReliability")})
-setGeneric(name="calculateStability", def=function(theObject, roundRange) {standardGeneric("calculateStability")})
+setGeneric(name="calculatePostPresentationReliability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculatePostPresentationReliability")})
+setGeneric(name="calculateStability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculateStability")})
 
 setGeneric(name="successPerNodeAndId", def=function(theObject) {standardGeneric("successPerNodeAndId")})
 
 setGeneric(name="calculateSpread", def=function(theObject) {standardGeneric("calculateSpread")})
 setGeneric(name="totalPowerUsage", def=function(theObject) {standardGeneric("totalPowerUsage")})
-setGeneric(name="calculateReliability", def=function(theObject, roundRange) {standardGeneric("calculateReliability")})
+setGeneric(name="calculateReliability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculateReliability")})
 setGeneric(name="calculateChaosReliability", def=function(theObject) {standardGeneric("calculateChaosReliability")})
-setGeneric(name="calculateWeakReliability", def=function(theObject, roundRange) {standardGeneric("calculateWeakReliability")})
+setGeneric(name="calculateWeakReliability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculateWeakReliability")})
 setGeneric(name="getOffSlots", def=function(theObject) {standardGeneric("getOffSlots")})
-setGeneric(name="meanOffSlot", def=function(theObject, roundRange) {standardGeneric("meanOffSlot")})
+setGeneric(name="meanOffSlot", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("meanOffSlot")})
 setGeneric(name="sdOffSlot", def=function(theObject) {standardGeneric("sdOffSlot")})
 
 setMethod(f="getOffSlots", signature = "TestResult", definition = function(theObject) {
@@ -125,8 +125,8 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
   return(successPerNode)
 })
 
-setMethod(f="calculatePostPresentationReliability", signature = c("TestResult", "numeric"),
-          definition = function(theObject, roundRange=c(-Inf, Inf)) {
+setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
+          definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
   maxData <- maxData[roundRange[[1]] <= maxData$rd & maxData$rd <= roundRange[[2]],]
   all_max_rounds <- unique(maxData$rd)
@@ -155,7 +155,7 @@ setMethod(f="calculatePostPresentationReliability", signature = c("TestResult", 
 
 calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
 
-setMethod(f="calculateReliability", signature = c("TestResult", "numeric"), definition = function(theObject, roundRange=c(-Inf, Inf)) {
+setMethod(f="calculateReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   networkwide_max <- max(theObject@location_data$node_id)
   all_rounds <- unique(theObject@max_data$rd)
   all_rounds[roundRange[[1]] <= all_rounds & all_rounds <= roundRange[[2]]]
@@ -231,11 +231,12 @@ chaos_reliability <- memoise(calculateChaosReliability, cache=db)
 reliability <- memoise(calculateReliability, cache=db)
 #reliability <- calculateReliability
 
-setMethod(f="calculateStability", signature = c("TestResult", "numeric"), definition = function(theObject, roundRange=c(-Inf, Inf)) {
+setMethod(f="calculateStability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
   maxData <- maxData[roundRange[[1]] <= maxData$rd & maxData$rd <= roundRange[[2]],]
   nodeCount <- length(unique(theObject@data$node_id))
   maxRounds <- c(36:199, 236:399, 436:600)
+  maxRounds <- maxRounds[roundRange[[1]] <= maxRounds & maxRounds <= roundRange[[2]]]
 
   round_result <- sapply(maxRounds, function(round) {
     nrow(maxData[maxData$rd == round,]) / nodeCount
@@ -246,7 +247,7 @@ setMethod(f="calculateStability", signature = c("TestResult", "numeric"), defini
 
 calculateStabilityCached <- memoise(calculateStability, cache=db)
 
-setMethod(f="calculateWeakReliability", signature = c("TestResult", "numeric"), definition = function(theObject, roundRange = c(-Inf, Inf)) {
+setMethod(f="calculateWeakReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   # counts cluster failures as partial failures for a round. e.g. 0.333 for a round where 1 cluster succeeds and 2 fails.
   
   all_rounds <- unique(theObject@max_data$rd)
@@ -274,7 +275,7 @@ setMethod(f="calculateWeakReliability", signature = c("TestResult", "numeric"), 
 
 weakReliability <- memoise(calculateWeakReliability, cache=db)
 
-setMethod(f="meanOffSlot", signature = c("TestResult", "numeric"), definition = function(theObject, roundRange = c(-Inf, Inf)) {
+setMethod(f="meanOffSlot", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
   maxData <- maxData[roundRange[[1]] <= maxData$rd & maxData$rd <= roundRange[[2]],]
   return(mean(maxData$off_slot))

@@ -111,11 +111,11 @@ shinyApp(
           HTML(
             
               paste(
-                paste( "Reliability:", calculatePostPresentationReliability(testResults[[input$num]], input$application_plot_range) ),
-                paste( "OldReliability:", calculateReliability(testResults[[input$num]], input$application_plot_range) ),
-                paste( "OldWeakReliability:", calculateWeakReliability(testResults[[input$num]], input$application_plot_range) ),
-                paste( "Stability:", calculateStability(testResults[[input$num]], input$application_plot_range) ),
-                paste( "MeanOffSlot:", meanOffSlot(testResults[[input$num]], input$application_plot_range) ),
+                paste( "Reliability:", calculatePostPresentationReliabilityCached(testResults[[input$num]], roundRange=input$application_plot_range) ),
+                paste( "OldReliability:", calculateReliability(testResults[[input$num]], roundRange=input$application_plot_range) ),
+                paste( "OldWeakReliability:", calculateWeakReliability(testResults[[input$num]], roundRange=input$application_plot_range) ),
+                paste( "Stability:", calculateStability(testResults[[input$num]], roundRange=input$application_plot_range) ),
+                paste( "MeanOffSlot:", meanOffSlot(testResults[[input$num]], roundRange=input$application_plot_range) ),
                 sep = "</br>"
               )
             )
