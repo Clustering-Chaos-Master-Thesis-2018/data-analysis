@@ -21,6 +21,7 @@ shinyApp(
       tabPanel("Application Heatmap",
                  verticalLayout(
                    textOutput("application_plot_name"),
+                   actionButton("pdf", "Open Location Plot"),
                    numericInput("num", label = h3("Which plot?"), value = 1),
                    sliderInput("application_plot_range", label = h3("Rounds span"), min = 0, 
                                max = 700, value = c(1, 50)),
@@ -339,5 +340,11 @@ shinyApp(
     output$total_ch_plot <- TotalCHPlot(input)
     output$ch_count_after_demotion<- CHCountAfterDemotionPlot(input)
     output$average_associating_ch_count_plot <- AverageAssociatingNodes(input)
+    
+    observeEvent(input$pdf, {
+      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+      tests <- testNames(abs_test_suite_path)
+      system(paste("open ", abs_test_suite_path, "/", tests[input$num], "/locations.pdf", sep = ''))
+    })
   }
 )
