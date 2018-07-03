@@ -8,9 +8,8 @@ library(data.table)
 library(memoise)
 
 db <- cache_filesystem("~/.rcache")
-<<<<<<< HEAD
 evaluation_directory <- "/Users/tejp/repos/Evaluation"
-=======
+
 pdfWidth <- 13
 pdfHeight <- 3.6
 
@@ -26,7 +25,7 @@ legendTopLeftCorner <- c(0.005, 0.75)
 legendTopRightCorner <- c(0.77, 0.75)
 legendBottomRightCorner <- c(0.77, 0.02)
 legendBottomLeftCorner <- c(0.01, 0.04)
->>>>>>> Refactor format variables and make the graphs smaller
+
 
 source("TestResult.R")
 source("utils.R")
