@@ -25,9 +25,10 @@ shinyApp(
                    numericInput("num", label = h3("Which plot?"), value = 1),
                    sliderInput("application_plot_range", label = h3("Rounds span"), min = 0, 
                                max = 700, value = c(1, 50)),
-                   plotOutput("application_plot", height  = "1080", width = "3840"),
-                   plotOutput("reliability_heatmap", height  = "1080", width = "3840"),
-                   plotOutput("wrong_chstate_heatmap", height = "1080", width = "3840")
+                   htmlOutput("range_reliability"),
+                   plotOutput("application_plot"),#, height  = "1080", width = "3840"),
+                   plotOutput("reliability_heatmap"),#, height  = "1080", width = "3840"),
+                   plotOutput("wrong_chstate_heatmap")#, height = "1080", width = "3840")
                )
       ),
       tabPanel("Reliability", 
@@ -91,6 +92,37 @@ shinyApp(
         dirs[endsWith(dirs, input$test_suite_path)]
         )
       
+    })
+    
+    output$range_reliability <- renderUI({
+      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+      
+      tests <- testNames(abs_test_suite_path)
+      if(length(tests) == 0) {
+        print("NOT working on application heatmap")
+        #output$error <- "No tests found. Are the simulation files present?"
+      } else {
+        print("Working on application heatmap")
+        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
+        testResults <- load_data_m(rows)
+        
+        return(
+          #HTML(paste("hello", "world", sep="<br/>"))
+          HTML(
+            
+              paste(
+                paste( "Reliability:", calculatePostPresentationReliability(testResults[[input$num]], input$application_plot_range) ),
+                paste( "OldReliability:", calculateReliability(testResults[[input$num]], input$application_plot_range) ),
+                paste( "OldWeakReliability:", calculateWeakReliability(testResults[[input$num]], input$application_plot_range) ),
+                paste( "Stability:", calculateStability(testResults[[input$num]], input$application_plot_range) ),
+                paste( "MeanOffSlot:", meanOffSlot(testResults[[input$num]], input$application_plot_range) ),
+                sep = "</br>"
+              )
+            )
+        )
+        
+        
+      }
     })
     
     output$application_plot <- renderPlot({
