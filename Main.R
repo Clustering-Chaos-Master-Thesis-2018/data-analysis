@@ -8,6 +8,7 @@ library(data.table)
 library(memoise)
 
 db <- cache_filesystem("~/.rcache")
+evaluation_directory <- "/Users/tejp/repos/Evaluation"
 
 source("TestResult.R")
 source("utils.R")
@@ -18,7 +19,7 @@ source("Reliability.R")
 registerDoMC(4)
 
 
-evaluation_directory <- "~/Exjobb/Evaluation"
+
 working_directory <- "~/tests"
 
 loadResultFromTestInfoRow <- function(row) {
