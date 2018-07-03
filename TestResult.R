@@ -125,6 +125,7 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
   return(successPerNode)
 })
 
+
 setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
           definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
@@ -151,9 +152,8 @@ setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
   })
   mean(round_result, na.rm = T)
 })
-
-
 calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
+
 
 setMethod(f="calculateReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   networkwide_max <- max(theObject@location_data$node_id)
@@ -191,6 +191,9 @@ setMethod(f="calculateReliability", signature = "TestResult", definition = funct
 
   return(mean(round_result))
 })
+reliability <- memoise(calculateReliability, cache=db) # deprecated
+calculateReliabilityCached <- memoise(calculateReliability, cache=db)
+
 
 setMethod(f="calculateChaosReliability", signature = "TestResult", definition = function(theObject) {
   networkwide_max <- max(theObject@location_data$node_id)
@@ -212,6 +215,8 @@ setMethod(f="calculateChaosReliability", signature = "TestResult", definition = 
   
   return(mean(round_result))
 })
+chaos_reliability <- memoise(calculateChaosReliability, cache=db) # deprecated
+calculateChaosReliabilityCached <- memoise(calculateChaosReliability, cache=db)
 
 setMethod(f="calculatePostPresentationChaosReliability", signature = "TestResult", definition = function(theObject) {
   maxData <- theObject@max_data
@@ -225,11 +230,8 @@ setMethod(f="calculatePostPresentationChaosReliability", signature = "TestResult
   
   return(mean(round_result))
 })
-
 calculatePostPresentationChaosReliabilityCached <- memoise(calculatePostPresentationChaosReliability, cache=db)
-chaos_reliability <- memoise(calculateChaosReliability, cache=db)
-reliability <- memoise(calculateReliability, cache=db)
-#reliability <- calculateReliability
+
 
 setMethod(f="calculateStability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
@@ -244,8 +246,8 @@ setMethod(f="calculateStability", signature = "TestResult", definition = functio
   
   return(mean(round_result))
 })
-
 calculateStabilityCached <- memoise(calculateStability, cache=db)
+
 
 setMethod(f="calculateWeakReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   # counts cluster failures as partial failures for a round. e.g. 0.333 for a round where 1 cluster succeeds and 2 fails.
@@ -272,8 +274,9 @@ setMethod(f="calculateWeakReliability", signature = "TestResult", definition = f
   
   return(reliability)
 })
+weakReliability <- memoise(calculateWeakReliability, cache=db) #deprecated
+calculateWeakReliabilityCached <- memoise(calculateWeakReliability, cache=db)
 
-weakReliability <- memoise(calculateWeakReliability, cache=db)
 
 setMethod(f="meanOffSlot", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   maxData <- theObject@max_data
@@ -281,9 +284,11 @@ setMethod(f="meanOffSlot", signature = "TestResult", definition = function(theOb
   return(mean(maxData$off_slot))
 })
 
+
 setMethod(f="sdOffSlot", signature = "TestResult", definition = function(theObject) {
   return(sd(theObject@max_data$off_slot))
 })
+
 
 max_count <- function(testResult) {
   testResult@
