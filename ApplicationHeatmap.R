@@ -50,7 +50,7 @@ plotWrongCHStateHeatmap <- function(testResult, round_interval=range(testResult@
   ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
   xSteps <- floor(seq(round_interval[1], round_interval[2], (round_interval[2] - round_interval[1]) / 9))
   
-  cbPalette <- c("#D55E00", "#009E73", "#E69F00")
+  cbPalette <- c("#009E73", "#D55E00", "#E69F00")
   
   p <- ggplot(chRoundStatus, aes(round, node_id, fill=status)) +
     geom_raster() +
