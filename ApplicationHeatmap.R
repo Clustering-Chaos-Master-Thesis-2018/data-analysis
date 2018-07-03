@@ -2,7 +2,6 @@ source("EvaluationWideCalculations.R")
 
 library(ggplot2)
 library(reshape2)
-source("EvaluationWideCalculations.R")
 
 plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@data$round)) {
   roundData <- testResult@data
