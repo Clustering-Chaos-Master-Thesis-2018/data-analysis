@@ -82,7 +82,7 @@ plotNodeLocations <- function(testResult, clusterHeads=c(), node_cluster_map, ro
   qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
   col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors[c(2, 3, 7)], c("Dark2", "Paired", "Set2")))
 
-  nodes$node_color_indexes <- mapvalues(nodes[["cluster_id"]], from=allClusterHeads, to=minColors)
+  nodes$node_color_indexes <- mapvalues(nodes[["cluster_id"]], from=allClusterHeads, to=minColors, warn_missing = F)
   nodes$color <- with(nodes, col_vector[node_color_indexes])
 
   # Add size column
