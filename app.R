@@ -4,6 +4,27 @@ source('Main.R')
 source('AppLib.R')
 source('CHStatisticsShinyApp.R')
 
+getTestNames <- function(input) {
+  abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+  testNames(abs_test_suite_path)
+}
+
+loadTestForHeatmaps <- function(input, plotName) {
+  abs_test_suite_path <- lookupFullNames(input$test_suite_path)
+  
+  tests <- testNames(abs_test_suite_path)
+  if(length(tests) == 0) {
+    print(paste("Could not load", plotName, "no tests found."))
+    return (NA)
+  } else {
+    print(paste("Working on ", plotName, ".", sep = ""))
+    rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
+    testResults <- load_data_m(rows)
+    index <- which(sapply(testResults, function(result) result@testName == input$num))
+    return(testResults[[index]])
+  }
+}
+
 shinyApp(
   ui = tagList(
     #shinythemes::themeSelector(),
@@ -21,9 +42,9 @@ shinyApp(
       tabPanel("Application Heatmap",
                  verticalLayout(
                    textOutput("application_plot_name"),
+                   selectInput("num", label = h3("Select Topology"), choices = list()),
                    actionButton("pdf", "Open Location Plot"),
-                   numericInput("num", label = h3("Which plot?"), value = 1),
-                   sliderInput("application_plot_range", label = h3("Rounds span"), min = 0, 
+                   sliderInput("application_plot_range", label = h3("Round Span"), min = 0, 
                                max = 700, value = c(1, 50)),
                    htmlOutput("range_reliability"),
                    plotOutput("application_plot"),#, height  = "1080", width = "3840"),
@@ -59,15 +80,18 @@ shinyApp(
       )
     )
   ),
-  server = function(input, output) {
+  server = function(input, output, session) {
     output$test_suits_radio_buttons <- renderUI({
       dirs <- partial()
+      
       
       test_suites <- dirs[dirs != "Simulations"]
       file_infos <- file.info(test_suites)
       file_infos <- file_infos[order(file_infos$ctime, decreasing = T),]
       
-      radioButtons("test_suite_path", label = NULL, rownames(file_infos), selected = NULL)
+      buttons <- radioButtons("test_suite_path", label = NULL, rownames(file_infos), selected = NULL)
+      updateSelectInput(session, "num", label = "Select Topology", choices = getTestNames(input))
+      return(buttons)
     })
     
     output$test_suites_check_boxes <- renderUI({
@@ -95,88 +119,34 @@ shinyApp(
     })
     
     output$range_reliability <- renderUI({
-      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
-      
-      tests <- testNames(abs_test_suite_path)
-      if(length(tests) == 0) {
-        print("NOT working on application heatmap")
-        #output$error <- "No tests found. Are the simulation files present?"
-      } else {
-        print("Working on application heatmap")
-        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
-        testResults <- load_data_m(rows)
-        
-        return(
-          #HTML(paste("hello", "world", sep="<br/>"))
-          HTML(
-            
-              paste(
-                paste( "Reliability:", calculatePostPresentationReliabilityCached(testResults[[input$num]], roundRange=input$application_plot_range) ),
-                paste( "OldReliability:", calculateReliability(testResults[[input$num]], roundRange=input$application_plot_range) ),
-                paste( "OldWeakReliability:", calculateWeakReliability(testResults[[input$num]], roundRange=input$application_plot_range) ),
-                paste( "Stability:", calculateStability(testResults[[input$num]], roundRange=input$application_plot_range) ),
-                paste( "MeanOffSlot:", meanOffSlot(testResults[[input$num]], roundRange=input$application_plot_range) ),
-                sep = "</br>"
-              )
+      testResult <- loadTestForHeatmaps(input, "Metric print")
+      return(
+        HTML(
+            paste(
+              paste( "Reliability:", calculatePostPresentationReliabilityCached(testResult, roundRange=input$application_plot_range) ),
+              paste( "OldReliability:", calculateReliabilityCached(testResult, roundRange=input$application_plot_range) ),
+              paste( "OldWeakReliability:", calculateWeakReliabilityCached(testResult, roundRange=input$application_plot_range) ),
+              paste( "Stability:", calculateStabilityCached(testResult, roundRange=input$application_plot_range) ),
+              paste( "MeanOffSlot:", meanOffSlot(testResult, roundRange=input$application_plot_range) ),
+              sep = "</br>"
             )
-        )
-        
-        
-      }
+          )
+      )
     })
     
     output$application_plot <- renderPlot({
-      
-      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
-      
-      tests <- testNames(abs_test_suite_path)
-      if(length(tests) == 0) {
-        print("NOT working on application heatmap")
-        #output$error <- "No tests found. Are the simulation files present?"
-      } else {
-        print("Working on application heatmap")
-        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
-        testResults <- load_data_m(rows)
-        output$application_plot_name <- renderText(testResults[[input$num]]@testName)
-        return(plotHeatmap(testResults[[input$num]], input$application_plot_range))
-      }
-      
-      
+        testResult <- loadTestForHeatmaps(input, "Application heatmap")
+        return(plotHeatmap(testResult, input$application_plot_range))
     })
+    
     output$reliability_heatmap <- renderPlot({
-      
-      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
-      
-      tests <- testNames(abs_test_suite_path)
-      
-      if(length(tests) == 0) {
-        print("NOT working on reliability heatmap")
-        #output$error <- "No tests found. Are the simulation files present?"
-      } else {
-        print("Working on reliability heatmap")
-        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
-        testResults <- load_data_m(rows)
-        output$application_plot_name <- renderText(testResults[[input$num]]@testName)
-        return(plotReliabilityHeatmap(testResults[[input$num]], input$application_plot_range))
-      }
+        testResult <- loadTestForHeatmaps(input, "Reliability heatmap")
+        return(plotReliabilityHeatmap(testResult, input$application_plot_range))
     })
     
     output$wrong_chstate_heatmap <- renderPlot({
-      
-      abs_test_suite_path <- lookupFullNames(input$test_suite_path)
-      
-      tests <- testNames(abs_test_suite_path)
-      
-      if(length(tests) == 0) {
-        print("NOT working on reliability heatmap")
-        #output$error <- "No tests found. Are the simulation files present?"
-      } else {
-        print("Working on chstate heatmap")
-        rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
-        testResults <- load_data_m(rows)
-        output$application_plot_name <- renderText(testResults[[input$num]]@testName)
-        return(plotWrongCHStateHeatmap(testResults[[input$num]], input$application_plot_range))
-      }
+        testResult <- loadTestForHeatmaps(input, "Wrong CH state heatmap")
+        return(plotWrongCHStateHeatmap(testResult, input$application_plot_range))
     })
     
     output$reliability_plot <- renderPlot({
@@ -376,7 +346,8 @@ shinyApp(
     observeEvent(input$pdf, {
       abs_test_suite_path <- lookupFullNames(input$test_suite_path)
       tests <- testNames(abs_test_suite_path)
-      system(paste("open ", abs_test_suite_path, "/", tests[input$num], "/locations.pdf", sep = ''))
+      index <- which(sapply(tests, function(result) result == input$num))
+      system(paste("open ", abs_test_suite_path, "/", tests[index], "/locations.pdf", sep = ''))
     })
   }
 )
