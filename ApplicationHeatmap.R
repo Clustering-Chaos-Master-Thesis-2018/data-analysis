@@ -19,7 +19,7 @@ plotReliabilityHeatmap <- function(testResult, round_interval=range(testResult@d
   ySteps <- c(1,seq(5,max(roundData$node_id),5), max(roundData$node_id))
   xSteps <- floor(seq(round_interval[1], round_interval[2], (round_interval[2] - round_interval[1]) / 9))
   
-  cbPalette <- c("#009E73", "#D55E00", "#CC79A7", "#E69F00", "#56B4E9")
+  cbPalette <- c("#009E73", "#D55E00", "#56B4E9", "#CC79A7", "#E69F00")
   #browser()
   p <- ggplot(successDF, aes(round, node_id, fill=status)) +
     geom_raster() +
