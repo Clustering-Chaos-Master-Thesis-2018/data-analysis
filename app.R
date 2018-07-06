@@ -19,6 +19,7 @@ loadTestForHeatmaps <- function(input, plotName) {
   } else {
     print(paste("Working on ", plotName, ".", sep = ""))
     rows <- lapply(tests, Curry(createTestInfoRow, abs_test_suite_path))
+    rows <- rows[!is.na(rows)]
     testResults <- load_data_m(rows)
     index <- which(sapply(testResults, function(result) result@testName == input$num))
     return(testResults[[index]])
