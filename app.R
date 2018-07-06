@@ -90,7 +90,7 @@ shinyApp(
       file_infos <- file_infos[order(file_infos$ctime, decreasing = T),]
       
       buttons <- radioButtons("test_suite_path", label = NULL, rownames(file_infos), selected = NULL)
-      updateSelectInput(session, "num", label = "Select Topology", choices = getTestNames(input))
+      
       return(buttons)
     })
     
@@ -100,7 +100,7 @@ shinyApp(
       test_suites <- dirs[dirs != "Simulations"]
       file_infos <- file.info(test_suites)
       file_infos <- file_infos[order(file_infos$ctime, decreasing = T),]
-      
+      updateSelectInput(session, "num", label = "Select Topology", choices = getTestNames(input))
       checkboxGroupInput("checkedTests",
                          label = h3("Test to use in the reliability plot"),
                          choices = test_suites,
