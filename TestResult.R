@@ -19,6 +19,7 @@ TestResult <- setClass(
 
 setGeneric(name="calculatePostPresentationChaosReliability", def=function(theObject) {standardGeneric("calculatePostPresentationChaosReliability")})
 setGeneric(name="calculatePostPresentationReliability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculatePostPresentationReliability")})
+setGeneric(name="calculatePostPresentationReliabilityTwo", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculatePostPresentationReliabilityTwo")})
 setGeneric(name="calculateStability", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("calculateStability")})
 
 setGeneric(name="successPerNodeAndId", def=function(theObject) {standardGeneric("successPerNodeAndId")})
@@ -125,6 +126,44 @@ setMethod(f="successPerNodeAndId", signature = "TestResult", definition = functi
   return(successPerNode)
 })
 
+setMethod(f="calculatePostPresentationReliabilityTwo", signature = "TestResult",
+          definition = function(theObject, ..., roundRange) {
+  maxData <- theObject@max_data
+  maxData <- maxData[roundRange[[1]] <= maxData$rd & maxData$rd <= roundRange[[2]],]
+  all_max_rounds <- unique(maxData$rd)
+  #print(theObject@testName)
+ # browser()
+  round_result <- lapply(all_max_rounds, function(round) {
+    cluster_heads <- maxData[maxData$rd == round & maxData$node_id == maxData$cluster_id,]
+    if(nrow(cluster_heads) == 0) {
+      return(data.frame(successfulMaxCount = 0 , totalMaxNodes = 0))
+    }
+    if(round %% 2 == 0) {
+      highest_local_max_last_round = getLastRoundsMax(round, cluster_heads, maxData)
+      data.frame(successfulMaxCount = nrow(cluster_heads[cluster_heads$max == highest_local_max_last_round,]), totalMaxNodes = nrow(cluster_heads))
+    } else {
+      nodes_succeded_with_max <- sum(sapply(cluster_heads$node_id, function(cluster_id) {
+        nodes_done_max <- maxData[maxData$rd == round & maxData$cluster_id == cluster_id,]
+        clusterwide_max <- max(nodes_done_max$node_id)
+        nrow(nodes_done_max[nodes_done_max$max == clusterwide_max,])
+      }))
+      if(nodes_succeded_with_max == 87 && nrow(maxData[maxData$rd == round,]) == 198) {
+        browser()
+      }
+      data.frame(successfulMaxCount = nodes_succeded_with_max, totalMaxNodes = nrow(maxData[maxData$rd == round,]))
+    }
+  })
+  if(length(round_result) == 0) {
+    return (NA)
+  }
+  round_result <- do.call("rbind", round_result)
+  asd <- round_result[complete.cases(round_result),]
+  asd <- apply(round_result, 2, sum)
+  return(asd["successfulMaxCount"] / asd["totalMaxNodes"])
+  #browser()
+  #round_result
+})
+
 
 setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
           definition = function(theObject, ..., roundRange) {
@@ -154,6 +193,7 @@ setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
 })
 calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
 
+calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliabilityTwo, cache = db)
 
 setMethod(f="calculateReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   networkwide_max <- max(theObject@location_data$node_id)
