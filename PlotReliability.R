@@ -112,10 +112,10 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       legend.justification = c(0, 0),
       legend.position = legend_position,
       plot.margin=grid::unit(c(0,0,0,0), "mm")
-    ) + coord_fixed(xyratio, ylim = ylim)
+    ) + coord_fixed(xyratio, ylim = ylim) + scale_y_continuous(breaks = do.call(seq, as.list(ylim)))
   
   return(plot)
 }
-#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
-#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
+#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
+#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=stabilityText)
 #run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2.pdf", "Competition Radius", c(0.735, 0.80), 13, 6, 3)

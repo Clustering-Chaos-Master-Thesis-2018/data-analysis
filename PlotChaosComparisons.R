@@ -23,10 +23,10 @@ chaos_comparison_loaded <- mclapply(chaos_comparison_test_suites, function(test_
 
 #run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_OldReliability.pdf", reliability, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
 run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=stabilityText)
 #run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_WeakReliability.pdf", weakReliability, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Latency.pdf", getOffSlots, "Protocol", legendTopRightCorner, pdfWidth, pdfHeight, fiveTestsLatencyXYRatio, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Energy.pdf", totalPowerUsage, "Protocol",legendBottomLeftCorner, pdfWidth, pdfHeight, fiveTestsEnergyXYRatio, ylim=c(120, 150), ylab="Est. Energy (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Latency.pdf", getOffSlots, "Protocol", legendTopRightCorner, pdfWidth, pdfHeight, fiveTestsLatencyXYRatio, ylim=c(0, 150), ylab=latencyText)
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Energy.pdf", totalPowerUsage, "Protocol",legendBottomLeftCorner, pdfWidth, pdfHeight, fiveTestsEnergyXYRatio, ylim=c(120, 150), ylab=energyText)
 
 clustering_off_50 <- c(
   file.path(evaluation_directory, "chaos-comparison/comparing-50-motes-test/cluster-off/clustering_off_1_2018-05-28_20.29.23"),
@@ -53,10 +53,10 @@ chaos_comparison_loaded <- mclapply(chaos_comparison_test_suites, function(test_
 
 
 #run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_OldReliability.pdf", reliability, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1, 0.2), ylab=reliabilityText)
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1, 0.2), ylab=stabilityText)
 #run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_WeakReliability.pdf", weakReliability, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=nineTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Latency.pdf", getOffSlots, "Protocol", legendTopRightCorner, pdfWidth, pdfHeight, nineTestsLatencyXYRatio, ylim=c(0, 150), ylab="Latency (Mean & STDEV)")
-run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Energy.pdf", totalPowerUsage, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, nineTestsEnergyXYRatio, ylim=c(120, 150), ylab="Est. Energy (Mean & STDEV)")
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Latency.pdf", getOffSlots, "Protocol", legendTopRightCorner, pdfWidth, pdfHeight, nineTestsLatencyXYRatio, ylim=c(0, 150, 20), ylab=latencyText)
+run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_50_Energy.pdf", totalPowerUsage, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, nineTestsEnergyXYRatio, ylim=c(120, 150, 10), ylab=energyText)
 
 
