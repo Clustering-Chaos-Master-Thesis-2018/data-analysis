@@ -147,10 +147,7 @@ setMethod(f="calculatePostPresentationReliabilityTwo", signature = "TestResult",
         clusterwide_max <- max(nodes_done_max$node_id)
         nrow(nodes_done_max[nodes_done_max$max == clusterwide_max,])
       }))
-      if(nodes_succeded_with_max == 87 && nrow(maxData[maxData$rd == round,]) == 198) {
-        browser()
-      }
-      data.frame(successfulMaxCount = nodes_succeded_with_max, totalMaxNodes = nrow(maxData[maxData$rd == round,]))
+      data.frame(successfulMaxCount = nodes_succeded_with_max, totalMaxNodes = nrow(maxData[maxData$rd == round & maxData$cluster_id %in% cluster_heads$cluster_id,]))
     }
   })
   if(length(round_result) == 0) {
@@ -160,8 +157,6 @@ setMethod(f="calculatePostPresentationReliabilityTwo", signature = "TestResult",
   asd <- round_result[complete.cases(round_result),]
   asd <- apply(round_result, 2, sum)
   return(asd["successfulMaxCount"] / asd["totalMaxNodes"])
-  #browser()
-  #round_result
 })
 
 
@@ -191,9 +186,9 @@ setMethod(f="calculatePostPresentationReliability", signature = "TestResult",
   })
   mean(round_result, na.rm = T)
 })
-calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
-
+#calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliability, cache=db)
 calculatePostPresentationReliabilityCached <- memoise(calculatePostPresentationReliabilityTwo, cache = db)
+#calculatePostPresentationReliabilityCached <- calculatePostPresentationReliabilityTwo
 
 setMethod(f="calculateReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {
   networkwide_max <- max(theObject@location_data$node_id)
@@ -279,14 +274,36 @@ setMethod(f="calculateStability", signature = "TestResult", definition = functio
   nodeCount <- length(unique(theObject@data$node_id))
   maxRounds <- c(36:199, 236:399, 436:600)
   maxRounds <- maxRounds[roundRange[[1]] <= maxRounds & maxRounds <= roundRange[[2]]]
-
+  #browser()
   round_result <- sapply(maxRounds, function(round) {
-    nrow(maxData[maxData$rd == round,]) / nodeCount
+    roundData <- maxData[maxData$rd == round,]
+    if(nrow(roundData) == 0) {
+      return(0)
+    }
+    if(grepl("clustering-off", theObject@testDirectory)) {
+      sum <- nrow(maxData[maxData$rd == round,])
+      sum / nodeCount
+    } else {
+      #browser()
+      clusters <- unique(roundData$cluster_id)
+      cluster_heads <- subset(roundData, cluster_id == node_id)$cluster_id
+      
+      #All nodes which have scheduled and run the max application.
+      sum <- nrow(maxData[maxData$rd == round,])
+      #browser()
+      #Remove all nodes that ran the max application but their cluster head did not, they couldn't have run the max application.
+      sum <- sum - nrow(roundData[roundData$cluster_id %in% clusters[!clusters %in% cluster_heads],])
+      sum / nodeCount
+    }
+    
   })
+  
   
   return(mean(round_result))
 })
+
 calculateStabilityCached <- memoise(calculateStability, cache=db)
+#calculateStabilityCached <- calculateStability
 
 
 setMethod(f="calculateWeakReliability", signature = "TestResult", definition = function(theObject, ..., roundRange) {

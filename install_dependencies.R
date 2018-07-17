@@ -1,4 +1,4 @@
-dependencies <- c("functional", "foreach", "doMC", "data.table", "devtools", "shiny", "xml2", "RColorBrewer", "plyr")
+dependencies <- c("functional", "foreach", "doMC", "data.table", "devtools", "shiny", "xml2", "RColorBrewer", "plyr", "dplyr")
 
 lapply(dependencies, function(dep) {
   if(!dep %in% rownames(installed.packages())) {

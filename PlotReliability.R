@@ -1,3 +1,5 @@
+library(dplyr)
+
 run <- function(test_suites, group_labels, plot_name, meanFunction, label, position, width, height, xyratio, ylim = NA, xlab = expression(paste("Network Size ", (m^2))), ylab, num_cols = 3) {
   the_plot <- plot_reliability(test_suites, group_labels, meanFunction, label, position, xyratio, ylim, xlab, ylab, num_cols)
   ggsave(file.path(evaluation_directory, "Plots", plot_name),  plot=the_plot, width=width, height = height)
@@ -29,7 +31,7 @@ label_and_flatten_data <- function(test_suite_groups, group_labels, meanFunction
         }
       }))
       dc
-    }, mc.cores = 4))
+    }, mc.cores = 2))
     b
   }, test_suite_groups, group_labels, SIMPLIFY = F, mc.cores = 4)
   do.call("rbind", a)
@@ -39,7 +41,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   if(length(test_suite_groups) != length(group_labels)) {
     stop("Requires same length on number of test suite groups and labels")
   }
-  cbPalette <- c("#000000", "#009E73", "#56B4E9", "#D55E00")
+  cbPalette <- c("#000000", "#009E73", "#56B4E9", "#D55E00", "#000000", "#009E73", "#56B4E9", "#D55E00", "#000000", "#009E73", "#56B4E9", "#D55E00")
   stats <- label_and_flatten_data(test_suite_groups, group_labels, reliabilityFunction)
 
   # Aggregate reliability for rows with same spread. Create mean and sd
@@ -56,44 +58,56 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
      identical(reliabilityFunction, calculateStabilityCached)) {
     
     stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
-    plot <- ggplot(stats) + geom_point(
-      size=3,
-      aes(
-        simulation_name,
-        reliability,
-        #ymax=reliability.mean+reliability.sd,
-        #ymin=reliability.mean-reliability.sd,
-        color=group
-      ),
-      position = position_dodge(width = 0.5))
-    
-    if(identical(reliabilityFunction, calculateStabilityCached)) {
-      ylab="Stability"
-    } else {
-      ylab="Reliability"
-    }
+    #browser()
+    pos = position_dodge(width = 0)
+    data = stats %>%
+      group_by(simulation_name, group) %>%
+      summarise(min = min(reliability), max = max(reliability), 
+                reliability = mean(reliability))
+  
+     plot <- ggplot(data, mapping = aes(simulation_name, reliability, color=group, linetype = group)) +
+      geom_errorbar(aes(ymin = min, ymax = max), width = 0.4, size = 0.4, position = pos, show.legend = F) +
+      geom_point(position = pos, show.legend = F, size = 1) +
+      geom_line(aes(group=group), show.legend = T, position = pos, size = 0.4)
+
+    #if(identical(reliabilityFunction, calculateStabilityCached)) {
+    #  ylab="Stability"
+    #} else {
+    #  ylab="Reliability"
+    #}
     
   } else {
     agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
-    plot <- ggplot(agg) + geom_pointrange(
-      size=1.5,
-      aes(
-        simulation_name,
-        reliability.mean,
-        ymax=reliability.mean+reliability.sd,
-        ymin=reliability.mean-reliability.sd,
-        color=group
-      ),
-      position = position_dodge(width = 0.5))
+    pos = position_dodge(width = 0)
+    data = stats %>%
+      group_by(simulation_name, group) %>%
+      summarise(min = mean(reliability) - sd(reliability), max = mean(reliability) + sd(reliability), 
+                reliability = mean(reliability))
+    
+    plot <- ggplot(data, mapping = aes(simulation_name, reliability, color=group, linetype = group)) +
+      geom_errorbar(aes(ymin = min, ymax = max), width = 0.4, size = 0.4, position = pos, show.legend = F) +
+      geom_point(position = pos, show.legend = F, size = 1) +
+      geom_line(aes(group=group), show.legend = T, position = pos, size = 0.4)
+    #plot <- ggplot(agg) + geom_pointrange(
+    #  size=1.5,
+    #  aes(
+    #    simulation_name,
+    #    reliability.mean,
+    #    ymax=reliability.mean+reliability.sd,
+    #    ymin=reliability.mean-reliability.sd,
+    #    color=group
+    #  ),
+    #  position = position_dodge(width = 0.5))
   }
   
   plot <- plot + ylab(ylab) + 
     xlab(xlab) +
     labs(color=label) +
     guides(color=guide_legend(ncol=num_cols)) +
-    scale_color_manual(values = cbPalette) +
+    scale_color_manual(name = label, values = cbPalette) +
+    scale_linetype_manual(name = label, values = order(cbPalette)) +
     theme(
-      text = element_text(size=16),
+      text = element_text(size=9),
       #axis.text.x=element_text(angle=45, hjust=1),
       legend.justification = c(0, 0),
       legend.position = legend_position,
@@ -102,5 +116,6 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   
   return(plot)
 }
-
+#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab="Reliability (Mean & STDEV)")
+#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab="Stability (Mean & STDEV)")
 #run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2.pdf", "Competition Radius", c(0.735, 0.80), 13, 6, 3)
