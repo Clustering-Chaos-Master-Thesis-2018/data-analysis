@@ -48,18 +48,17 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   agg <- aggregate(reliability~simulation_name+group+spread, stats, function(a) c(mean=mean(a), sd=sd(a)))
   agg <- do.call(data.frame, agg)
 
-  #stats <- stats[complete.cases(stats),]
+  stats <- stats[complete.cases(stats),]
   #order by spread
-  
+  stats$simulation_name <- factor(stats$simulation_name, levels = unique(stats$simulation_name)[order(unique(stats$spread))])
+  pos = position_dodge(width = 0)
+
   plot <- NA
   if(identical(reliabilityFunction, reliability) ||
      identical(reliabilityFunction, chaos_reliability) ||
      identical(reliabilityFunction, calculatePostPresentationReliabilityCached) ||
      identical(reliabilityFunction, calculateStabilityCached)) {
-    
-    stats$simulation_name <- factor(stats$simulation_name, levels = stats$simulation_name[order(unique(stats$spread))])
-    #browser()
-    pos = position_dodge(width = 0)
+   
     data = stats %>%
       group_by(simulation_name, group) %>%
       summarise(min = min(reliability), max = max(reliability), 
@@ -69,16 +68,8 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       geom_errorbar(aes(ymin = min, ymax = max), width = 0.4, size = 0.4, position = pos, show.legend = F) +
       geom_point(position = pos, show.legend = F, size = 1) +
       geom_line(aes(group=group), show.legend = T, position = pos, size = 0.4)
-
-    #if(identical(reliabilityFunction, calculateStabilityCached)) {
-    #  ylab="Stability"
-    #} else {
-    #  ylab="Reliability"
-    #}
-    
   } else {
-    agg$simulation_name <- factor(agg$simulation_name, levels = unique(agg$simulation_name[order(agg$spread)]))
-    pos = position_dodge(width = 0)
+
     data = stats %>%
       group_by(simulation_name, group) %>%
       summarise(min = mean(reliability) - sd(reliability), max = mean(reliability) + sd(reliability), 
@@ -88,16 +79,6 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
       geom_errorbar(aes(ymin = min, ymax = max), width = 0.4, size = 0.4, position = pos, show.legend = F) +
       geom_point(position = pos, show.legend = F, size = 1) +
       geom_line(aes(group=group), show.legend = T, position = pos, size = 0.4)
-    #plot <- ggplot(agg) + geom_pointrange(
-    #  size=1.5,
-    #  aes(
-    #    simulation_name,
-    #    reliability.mean,
-    #    ymax=reliability.mean+reliability.sd,
-    #    ymin=reliability.mean-reliability.sd,
-    #    color=group
-    #  ),
-    #  position = position_dodge(width = 0.5))
   }
   
   plot <- plot + ylab(ylab) + 
@@ -108,14 +89,10 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
     scale_linetype_manual(name = label, values = order(cbPalette)) +
     theme(
       text = element_text(size=9),
-      #axis.text.x=element_text(angle=45, hjust=1),
       legend.justification = c(0, 0),
       legend.position = legend_position,
       plot.margin=grid::unit(c(0,0,0,0), "mm")
-    ) + coord_fixed(xyratio, ylim = ylim) + scale_y_continuous(breaks = do.call(seq, as.list(ylim)))
+    ) + coord_fixed(xyratio, ylim = c(ylim[1], ylim[2])) + scale_y_continuous(breaks = do.call(seq, as.list(ylim)))
   
   return(plot)
 }
-#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Reliability.pdf", calculatePostPresentationReliabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText)
-#run(chaos_comparison_loaded, chaos_comparison_labels, "ChaosComparison_200_Stability.pdf", calculateStabilityCached, "Protocol", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=stabilityText)
-#run(competition_radius_loaded, competition_radius_labels, "ResyncThreshold2.pdf", "Competition Radius", c(0.735, 0.80), 13, 6, 3)

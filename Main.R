@@ -16,14 +16,14 @@ pdfHeight <- 3.6
 nineTestsXYRatio <- 5.1
 fiveTestsXYRatio <- 3#1.15
 nineTestsLatencyXYRatio <- 0.0345
-fiveTestsLatencyXYRatio <- 0.0077
+fiveTestsLatencyXYRatio <- 0.0197
 reliabilityText <- "Reliability (Mean & Min/Max)"
 stabilityText <- "Stability (Mean & Min/Max)"
 energyText <- "Energy (Mean & STDEV)"
 latencyText <- "Latency (Mean & STDEV)"
 
-nineTestsEnergyXYRatio <- 0.068
-fiveTestsEnergyXYRatio <- 0.0383
+nineTestsEnergyXYRatio <- 0.175
+fiveTestsEnergyXYRatio <- 0.0983
 
 legendTopLeftCorner <- c(0.005, 0.75)
 legendTopRightCorner <- c(0.65, 0.80)

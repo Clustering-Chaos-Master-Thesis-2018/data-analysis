@@ -44,8 +44,8 @@ max_node_count_test_suites <- list(max_node_count_5, max_node_count_10, max_node
 max_node_count_loaded <- mclapply(max_node_count_test_suites, function(test_suite_vector) mclapply(test_suite_vector, loadResultsFromTestSuitePath, mc.cores = 4), mc.cores = 4)
 
 
-#run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_OldReliability.pdf", reliability, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText, num_cols = 4)
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf", calculatePostPresentationReliabilityCached, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText, num_cols = 4)
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Stability.pdf", calculateStabilityCached, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=stabilityText, num_cols = 4)
-#run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0,1), ylab=reliabilityText, num_cols = 4)
-run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Max Node Count", legendTopLeftCorner, pdfWidth, pdfHeight, fiveTestsLatencyXYRatio, ylim=c(0, 150), ylab=latencyText, num_cols = 4)
+#run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_OldReliability.pdf", reliability, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=reliabilityText, num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf", calculatePostPresentationReliabilityCached, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=reliabilityText, num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Stability.pdf", calculateStabilityCached, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=stabilityText, num_cols = 4)
+#run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Max Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=reliabilityText, num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Max Node Count", legendTopLeftCorner, pdfWidth, pdfHeight, fiveTestsLatencyXYRatio, ylim=c(0, 150, 20), ylab=latencyText, num_cols = 4)
