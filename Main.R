@@ -21,13 +21,16 @@ reliabilityText <- "Reliability (Mean & Min/Max)"
 stabilityText <- "Stability (Mean & Min/Max)"
 energyText <- "Energy (Mean & STDEV)"
 latencyText <- "Latency (Mean & STDEV)"
+promotedCHCountText <- "Promoted Cluster Heads (Mean & Min/Max)"
+demotedCHCountText <- "Demoted Cluster Heads (Mean & Min/Max)"
+chsAfterDemotionText <- "Cluster Heads after Demotion (Mean & Min/Max)"
 
 nineTestsEnergyXYRatio <- 0.175
 fiveTestsEnergyXYRatio <- 0.0983
 
 legendTopLeftCorner <- c(0.005, 0.75)
 legendTopRightCorner <- c(0.65, 0.80)
-legendBottomRightCorner <- c(0.77, 0.02)
+legendBottomRightCorner <- c(0.60, 0.02)
 legendBottomLeftCorner <- c(0.01, 0.04)
 
 

@@ -49,3 +49,7 @@ run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Reliability.pdf"
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Stability.pdf", calculateStabilityCached, "Nodes per Cluster Ratio", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=stabilityText, num_cols = 4)
 #run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_WeakReliability.pdf", weakReliability, "Nodes per Cluster Ratio", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=reliabilityText, num_cols = 4)
 run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_Latency.pdf", getOffSlots, "Nodes per Cluster Ratio", legendTopLeftCorner, pdfWidth, pdfHeight, fiveTestsLatencyXYRatio, ylim=c(0, 150, 20), ylab=latencyText, num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_PromotedCHCount.pdf", promotedCHCount, "Nodes per Cluster Ratio", legendTopLeftCorner, pdfWidth, pdfHeight, 0.165, ylim=c(0, 18, 2), ylab=promotedCHCountText, num_cols = 4)
+run(max_node_count_loaded, max_node_count_labels, "MaxNodeCount_DemotedCHCount.pdf", demotedCHCount, "Nodes per Cluster Ratio", legendTopLeftCorner, pdfWidth, pdfHeight, 0.295, ylim=c(0, 10, 2), ylab=promotedCHCountText, num_cols = 4)
+
+

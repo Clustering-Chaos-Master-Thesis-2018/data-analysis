@@ -32,6 +32,39 @@ setGeneric(name="calculateWeakReliability", def=function(theObject, ..., roundRa
 setGeneric(name="getOffSlots", def=function(theObject) {standardGeneric("getOffSlots")})
 setGeneric(name="meanOffSlot", def=function(theObject, ..., roundRange=c(-Inf,Inf)) {standardGeneric("meanOffSlot")})
 setGeneric(name="sdOffSlot", def=function(theObject) {standardGeneric("sdOffSlot")})
+setGeneric(name="promotedCHCount", def=function(theObject) {standardGeneric("promotedCHCount")})
+setGeneric(name="demotedCHCount", def=function(theObject) {standardGeneric("demotedCHCount")})
+setGeneric(name="chsAfterDemotion", def=function(theObject) {standardGeneric("chsAfterDemotion")})
+
+setMethod(f="promotedCHCount", signature = "TestResult", definition = function(theObject) {
+  browser()
+  promotedCHs <- getPromotedCHs(theObject@data)
+  
+  sapply(promotedCHs, length)
+})
+
+setMethod(f="demotedCHCount", signature = "TestResult", definition = function(theObject) {
+  roundData <- theObject@data
+  
+  removedCHs <- getRemovedCHs(roundData)
+  associatingCHs <- getAssociatingCHs(roundData)
+  
+  #CHs that are proper demoted, and not removed because thery associated.
+  demotedCHs <- (mapply(function(a, b) {setdiff(a, b)}, removedCHs, associatingCHs))
+  sapply(demotedCHs, length)
+})
+
+setMethod(f="chsAfterDemotion", signature = "TestResult", definition = function(theObject) {
+  roundData <- theObject@data
+  
+  removedCHs <- getRemovedCHs(roundData)
+  promotedCHs <- getPromotedCHs(roundData)
+  
+  promotedCHCount <- sapply(promotedCHs, length)
+  removedCHCount  <- sapply(removedCHs, length)
+  
+  promotedCHCount - removedCHCount
+})
 
 setMethod(f="getOffSlots", signature = "TestResult", definition = function(theObject) {
   return(theObject@max_data$off_slot)

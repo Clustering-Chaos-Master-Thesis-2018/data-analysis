@@ -57,7 +57,10 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   if(identical(reliabilityFunction, reliability) ||
      identical(reliabilityFunction, chaos_reliability) ||
      identical(reliabilityFunction, calculatePostPresentationReliabilityCached) ||
-     identical(reliabilityFunction, calculateStabilityCached)) {
+     identical(reliabilityFunction, calculateStabilityCached) ||
+     identical(reliabilityFunction, promotedCHCount) ||
+     identical(reliabilityFunction, demotedCHCount) ||
+     identical(reliabilityFunction, chsAfterDemotion)) {
    
     data = stats %>%
       group_by(simulation_name, group) %>%
@@ -66,7 +69,7 @@ plot_reliability <- function(test_suite_groups, group_labels, reliabilityFunctio
   
      plot <- ggplot(data, mapping = aes(simulation_name, reliability, color=group, linetype = group)) +
       geom_errorbar(aes(ymin = min, ymax = max), width = 0.4, size = 0.4, position = pos, show.legend = F) +
-      geom_point(position = pos, show.legend = F, size = 1) +
+      geom_point(position = pos, show.legend = F, size = 2) +
       geom_line(aes(group=group), show.legend = T, position = pos, size = 0.4)
   } else {
 

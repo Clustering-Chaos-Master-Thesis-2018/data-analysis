@@ -40,3 +40,5 @@ run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Reliability.pdf"
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Stability.pdf", calculateStabilityCached, "Minimum Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=stabilityText)
 #run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_WeakReliability.pdf", weakReliability, "Minimum Node Count", legendBottomLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsXYRatio, ylim=c(0, 1, 0.20), ylab=reliabilityText)
 run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_Latency.pdf", getOffSlots, "Minimum Node Count", legendTopLeftCorner, pdfWidth, pdfHeight, xyratio=fiveTestsLatencyXYRatio, ylim=c(0, 150, 20), ylab=latencyText)
+run(min_node_count_loaded, min_node_count_labels, "MinNodeCount_CHsAfterDemotion.pdf", chsAfterDemotion, "Minimum Node Count", legendBottomRightCorner, pdfWidth, pdfHeight, xyratio=0.29, ylim=c(0, 10, 2), ylab=chsAfterDemotionText, num_cols = 4)
+
